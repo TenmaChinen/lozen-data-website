@@ -1,0 +1,59 @@
+header{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.header-title{
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(69, 69, 69);
+}
+
+.detail-title{
+  font-size: 20px;
+  align-self: center;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  margin: 10px;
+  background-color: rgb(126, 174, 147);
+  border-radius: 5px;
+  width: 90%;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Definition List ( Container ) */
+
+dl{
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-y: auto;
+  padding-top: 10px;
+  padding-bottom: 300px;
+}
+
+/* Definition Term ( Label ) */
+dt{
+  color: rgb(92, 92, 92);
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Definition Description ( Text ) */
+dd{
+  color: rgb(29, 29, 29);
+  text-indent: 10px;
+  font-size: 16px;
+}
+
+.dl-group{
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}

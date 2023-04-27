@@ -1,0 +1,87 @@
+.form-container{
+  border-radius: 2px;
+  background-color: white;
+  box-shadow: gray 1px 1px 5px;
+  min-width: 30%;
+}
+
+.form-header{
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+  background-color: rgb(70, 70, 70);
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-body{
+  padding: 15px;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* Parts */
+
+.form-title{
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-form{
+  min-width: 50px;
+  border: none;
+  outline: none;
+  color: rgb(92, 92, 92);
+  font-size: 14px;
+  font-weight: bold;
+  background:none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+
+form label{
+  color: gray;
+  font-size: 14px;
+}
+
+form input,
+form textarea{
+  color: rgb(68, 68, 68);
+  outline: none;
+  font-size: 15px;
+  padding: 2px;
+  resize: none;
+}
+
+
+form textarea{
+  height: 100px;
+}
+
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 10px;
+}

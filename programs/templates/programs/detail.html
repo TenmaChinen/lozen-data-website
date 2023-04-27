@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{% url 'programs:list' training_id=program.training.id %}"></a>
+{% endblock %}
+
+{% block title %}Training Programs{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'programs/css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+  <div class="header-title">{{program.training.title}} Details</div>
+  <div>
+    <a class="btn-link" href="{% url 'programs:update' pk=program.id %}">Edit</a>
+    <a class="btn-link" href="{% url 'weeks_days:list_week' program_id=program.id %}">Exercises</a>
+  </div>
+</header>
+
+<div class="detail-title">{{program.title}}</div>
+
+<dl>
+
+  <div class="dl-group">
+    <dt>Title :</dt>
+    <dd>{{program.title}}</dd>
+  </div>
+
+  <div class="dl-group">
+    <dt>Description :</dt>
+    <dd>{{program.description}}</dd>
+  </div>
+
+  <div class="dl-group">
+    <dt>Must Know :</dt>
+    <dd>{{program.must_know}}</dd>
+  </div>
+
+  <div class="dl-group">
+    <dt>Requirements :</dt>
+    <dd>{{program.requirements}}</dd>
+  </div>
+
+</dl>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Exercise{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+  main {
+    padding: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+  <div class="form-header">
+    <div class="form-title">Create Exercise</div>
+    <div class="form-title">Week {{day.week.week}} / Day {{day.day}}</div>
+  </div>
+
+  <div class="form-body">
+    <form id="form" method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        {{form.title.label_tag}}
+        {{form.title}}
+      </div>
+
+      <div class="form-grid">
+        {% for field in form.visible_fields|slice:"1:-3" %}
+        <div class="form-group">
+          {{field.label_tag}}
+          {{field}}
+        </div>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{form.rir.label_tag}}
+        {{form.rir}}
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          {{form.rest_minutes.label_tag}}
+          {{form.rest_minutes}}
+        </div>
+        <div class="form-group">
+          {{form.rest_seconds.label_tag}}
+          {{form.rest_seconds}}
+        </div>
+      </div>
+        
+    </form>
+  </div>
+
+  <div class="form-footer">
+    <a type="button" class="btn-form" href="{% url 'exercises:list' day_id=day.id %}">Cancel</a>
+    <button type="submit" form="form" class="btn-form">Create</button>
+  </div>
+
+</div>
+
+{% endblock %}

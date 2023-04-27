@@ -1,0 +1,71 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
+body{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
+main{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-grow: 1;
+  background-color: rgb(240, 240, 240);
+  overflow-y: auto;
+}
+
+/* NAV */
+
+nav{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: rgb(50, 50, 50);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-pack{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-pack a{
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.nav-pack a:hover{
+  background-color: rgb(77, 77, 77);
+}
+
+.nav-title{
+  color: white;
+  font-size: 18px;
+  padding: 5px;
+}
+
+/* BUTTONS */
+
+.btn-link{
+  background-color: rgb(57, 56, 56);
+  text-decoration: none;
+  padding: 10px;
+  color: white;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+}

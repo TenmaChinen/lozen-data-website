@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{% url 'weeks_days:list_week' program_id=week.program.id %}"></a>
+{% endblock %}
+
+
+{% block title %}Program Days{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/icons.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+  <div class="header-title">Program Week {{week.week}}</div>
+  <a id="btn-add" class="btn-link" href="{% url 'weeks_days:create_day' week_id=week.id %}">Add Day</a>
+</header>
+
+<div class="list-title">{{week.program.title}}</div>
+
+<div class="list-container">
+  
+  {% for day in list_day %}
+    <div class="list-item">
+      <a class="btn-item-title" href="{% url 'exercises:list' day_id=day.id %}">Day {{day.day}}</a>
+      {# <a class="btn-icon btn-edit" href="{% url 'days:update_day' pk=day.id %}"></a> #}
+    </div>
+  {% endfor %}
+    
+</div>
+
+{% endblock %}

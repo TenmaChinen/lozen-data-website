@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{% url 'programs:list' training_id=program.training.id %}"></a>
+{% endblock %}
+
+{% block title %}Program Weeks{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+  <div class="header-title">Program Weeks</div>
+  <a id="btn-add" class="btn-link" href="{% url 'weeks_days:create_week' program_id=program.id %}">Add Week</a>
+</header>
+
+<div class="list-title">{{program.title}}</div>
+
+<div class="list-container">
+  
+  {% for week in list_week %}
+    <div class="list-item">
+      <a class="btn-item-title" href="{% url 'weeks_days:list_day' week_id=week.id %}">Week {{week.week}}</a>
+      {# <a class="btn-icon btn-edit" href="{% url 'weeks:update' pk=week.id %}"></a> #}
+      
+    </div>
+  {% endfor %}
+    
+</div>
+
+{% endblock %}
