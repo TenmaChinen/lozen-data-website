@@ -21,7 +21,6 @@
 
   <div class="form-header">
     <div class="form-title">Create Exercise</div>
-    <div class="form-title">Week {{day.week.week}} / Day {{day.day}}</div>
   </div>
 
   <div class="form-body">
@@ -29,8 +28,8 @@
       {% csrf_token %}
 
       <div class="form-group">
-        {{form.title.label_tag}}
-        {{form.title}}
+        <label>Exercise Name:</label>
+        {{form.exercise_info}}
       </div>
 
       <div class="form-grid">
@@ -62,8 +61,11 @@
   </div>
 
   <div class="form-footer">
-    <a type="button" class="btn-form" href="{% url 'exercises:list' day_id=day.id %}">Cancel</a>
-    <button type="submit" form="form" class="btn-form">Create</button>
+    <div></div>
+    <div>
+      <a type="button" class="btn-form" href="{% url 'exercises:list' program_id week day %}">Cancel</a>
+      <button type="submit" form="form" class="btn-form">Create</button>
+    </div>
   </div>
 
 </div>

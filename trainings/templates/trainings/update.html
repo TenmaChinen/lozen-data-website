@@ -4,7 +4,7 @@
 {% block title %}Update Training{% endblock %}
 
 {% block links %}
-<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block styles %}
@@ -17,24 +17,34 @@
 
 {% block content %}
 
-<div class="form-container">
+  <div class="form-container">
 
-  <div class="form-header">
-    <div class="form-title">Update Training Group</div>
+    <div class="form-header">
+      <div class="form-title">Update Training Group</div>
+    </div>
+
+    <div class="form-body">
+      <form id="form" method="POST">
+        {% csrf_token %}
+        
+        {% for field in form %}
+          <div class="form-group">
+            {{field.label_tag}}
+            {{field}}
+          </div>
+        {% endfor %}
+          
+      </form>
+    </div>
+
+    <div class="form-footer">
+      <a type="button" class="btn-form btn-delete" href="{% url 'trainings:delete' pk=training.id %}">Delete</a>
+      <div class="footer-group">
+        <a type="button" class="btn-form" href="{% url 'trainings:list' %}">Cancel</a>
+        <button type="submit" form="form" class="btn-form">Save</button>
+      </div>
+    </div>
+
   </div>
-
-  <div class="form-body">
-    <form id="form" method="POST">
-      {% csrf_token %}
-      {{form.as_p}}
-    </form>
-  </div>
-
-  <div class="form-footer">
-    <a type="button" class="btn-form" href="{% url 'trainings:list' %}">Cancel</a>
-    <button type="submit" form="form" class="btn-form">Save</button>
-  </div>
-
-</div>
 
 {% endblock %}

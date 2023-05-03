@@ -1,13 +1,16 @@
+from exercises_info.models import ExerciseInfo
 from programs.models import Program
-from weeks_days.models import Day
 from django.db import models
 
+L_WEEKS = [(week,f'Week {week}') for week in range(1,21)]
+L_DAYS = [(day,f'Day {day}') for day in range(1,8)]
+
 class Exercise(models.Model):
-  # TODO : This should be Exercise Info ID 
-  #  exercise names will be part of the exercise info section as selector )
-  title = models.CharField(max_length=32)
-  day = models.ForeignKey(Day, on_delete=models.CASCADE)
-  idx = models.PositiveSmallIntegerField(blank=False, null=False)
+  exercise_info = models.ForeignKey(ExerciseInfo, on_delete=models.CASCADE)
+  program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='exercises')
+  week = models.PositiveSmallIntegerField(choices=L_WEEKS, blank=False,null=False, default=1)
+  day = models.PositiveSmallIntegerField(choices=L_DAYS, blank=False,null=False, default=1)
+  index = models.PositiveSmallIntegerField(blank=False, null=False)
   rounds = models.PositiveSmallIntegerField(blank=True, null=True)
   reps = models.PositiveSmallIntegerField(blank=True, null=True)
   percent = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -20,3 +23,18 @@ class Exercise(models.Model):
   
   def rest_seconds(self):
     return self.rest % 60
+  
+  # TODO : Document "self._meta.fields" or "self._meta.get_fields()"
+  @classmethod
+  def get_fields(cls):
+    return [ field.name for field in cls._meta.get_fields() ]
+  
+  @classmethod
+  def get_csv_fields(cls):
+    l_excluded = ['id', 'program', 'index']
+    l_field_name = [ field.name for field in cls._meta.get_fields() if field.name not in l_excluded ]
+    
+    target_idx = l_field_name.index('exercise_info')
+    l_field_name.pop(target_idx)
+    l_field_name.insert(target_idx, 'exercise_info_id')
+    return l_field_name

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Exercise{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+  main {
+    padding: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+  <div class="form-header">
+    <div class="form-title">Delete Exercise ?</div>
+  </div>
+
+  <div class="form-body">
+    <form id="form" method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Exercise Name:</label>
+        {{exercise.exercise_info}}
+      </div>
+        
+    </form>
+  </div>
+
+  <div class="form-footer">
+    <div></div>
+    <div>
+      <a type="button" class="btn-form" href="{% url 'exercises:list' exercise.program_id exercise.week exercise.day %}">Cancel</a>
+      <button type="submit" form="form" class="btn-form btn-delete">Yes</button>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

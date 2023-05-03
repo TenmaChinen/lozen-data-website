@@ -8,8 +8,7 @@ class ExerciseForm(forms.ModelForm):
   
   class Meta:
     model = Exercise
-    exclude = ('program', 'idx', 'week', 'day', 'rest', )
-
+    exclude = ('program', 'index', 'rest', )
 
   def clean(self):
     cleaned_data = super().clean()
@@ -19,3 +18,4 @@ class ExerciseForm(forms.ModelForm):
     cleaned_data['rest'] = rest_time
     return cleaned_data
 
+  

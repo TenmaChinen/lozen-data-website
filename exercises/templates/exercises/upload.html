@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Exercises{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form-upload.css' %}">
+{% endblock %}
+
+{% block styles %}
+  <style>
+    main {
+      padding: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-container">
+
+    <div class="form-header">
+      <div class="form-title">Update Raw CSV</div>
+    </div>
+
+    <div class="form-body">
+      <form id="form" method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label>Raw CSV</label>
+          <textarea name="raw_csv">{{raw_csv}}</textarea>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-footer">
+      <div></div>
+      <div class="footer-group">
+        <a type="button" class="btn-form" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}">Cancel</a>
+        <button type="submit" form="form" class="btn-form">Save</button>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

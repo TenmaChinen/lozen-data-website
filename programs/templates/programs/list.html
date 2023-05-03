@@ -16,7 +16,7 @@
 
 <header>
   <div class="header-title">Training Programs</div>
-  <a id="btn-add" class="btn-link" href="{% url 'programs:create' training_id=training.id %}">Create Program</a>
+  <a id="btn-add" class="btn-link" href="{% url 'programs:create' training.id %}">Create Program</a>
 </header>
 
 <div class="list-title">{{training.title}}</div>
@@ -25,8 +25,8 @@
   
   {% for program in program_list %}
     <div class="list-item">
-      <a class="btn-item-title" href="{% url 'programs:detail' pk=program.id %}">{{program.title}}</a>
-      <a class="btn-icon btn-edit" href="{% url 'programs:update' pk=program.id %}"></a>
+      <a class="btn-item-title" href="{% url 'programs:detail' program.id %}">{{program.title}}</a>
+      <a class="btn-icon btn-edit" href="{% url 'programs:update' program.id %}"></a>
     </div>
   {% endfor %}
     

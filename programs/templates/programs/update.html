@@ -17,31 +17,34 @@
 
 {% block content %}
 
-<div class="form-container">
+  <div class="form-container">
 
-  <div class="form-header">
-    <div class="form-title">Update Program</div>
-  </div>
+    <div class="form-header">
+      <div class="form-title">Update Program</div>
+    </div>
 
-  <div class="form-body">
-    <form id="form" method="POST">
-      {% csrf_token %}
-      
-      {% for field in form %}
-        <div class="form-group">
-          {{field.label_tag}}
-          {{field}}
-        </div>
-      {% endfor %}
+    <div class="form-body">
+      <form id="form" method="POST">
+        {% csrf_token %}
         
-    </form>
-  </div>
+        {% for field in form %}
+          <div class="form-group">
+            {{field.label_tag}}
+            {{field}}
+          </div>
+        {% endfor %}
+          
+      </form>
+    </div>
 
-  <div class="form-footer">
-    <a type="button" class="btn-form" href="{% url 'programs:list' training_id=program.training.id %}">Cancel</a>
-    <button type="submit" form="form" class="btn-form">Save</button>
-  </div>
+    <div class="form-footer">
+      <a type="button" class="btn-form btn-delete" href="{% url 'programs:delete' pk=program.id %}">Delete</a>
+      <div class="footer-group">
+        <a type="button" class="btn-form" href="{% url 'programs:list' training_id=program.training.id %}">Cancel</a>
+        <button type="submit" form="form" class="btn-form">Save</button>
+      </div>
+    </div>
 
-</div>
+  </div>
 
 {% endblock %}

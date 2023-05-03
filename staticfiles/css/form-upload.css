@@ -1,0 +1,24 @@
+.form-container{
+  height: 100%; 
+}
+
+form{
+ height: 100%;
+ flex-grow: 1;
+}
+
+.form-body{
+ height: 100%;
+ flex-grow: 1;
+}
+
+.form-group{
+ height: 100%;
+ flex-grow: 1;
+}
+
+form textarea{
+ min-height: 0px;
+ height: 100%;
+ flex-grow: 1;
+}

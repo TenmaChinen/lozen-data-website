@@ -5,6 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
 		<title>{% block title %}Lozen Database{% endblock %}</title>
 
 		<link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -22,8 +23,12 @@
 				<div class="nav-title">Lozen</div>
 			</div>
 			<div class="nav-pack">
-				<a href="{% url 'trainings:list' %}">Programs</a>
-				<a href="{% url 'trainings:list' %}">Workouts</a>
+				
+				{% with request.path as url %}
+					<a href="{% url 'trainings:list' %}" class="{% if 'trainings' in url %}active{% endif %}">Programs</a>
+					<a href="{% url 'exercises_info:list' %}" class="{% if 'exercises_info' in url %}active{% endif %}">Exercises Info</a>	
+				{% endwith %}
+					
 			</div>
 		</nav>
 

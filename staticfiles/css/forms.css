@@ -3,6 +3,8 @@
   background-color: white;
   box-shadow: gray 1px 1px 5px;
   min-width: 30%;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-header{
@@ -26,11 +28,12 @@ form{
 }
 
 .form-footer{
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
 }
 
 /* Parts */
@@ -53,6 +56,15 @@ form{
   text-decoration: none;
 }
 
+.btn-form:focus{
+  text-decoration: underline;
+}
+
+.btn-delete{
+  color: rgb(193, 100, 100);
+  align-self: flex-start;
+
+}
 
 form label{
   color: gray;
@@ -60,19 +72,20 @@ form label{
 }
 
 form input,
-form textarea{
+form textarea,
+form select{
   color: rgb(68, 68, 68);
   outline: none;
+  border: 1px solid gray;
+  border-radius: 5px;
   font-size: 15px;
-  padding: 10px;
+  padding: 8px;
   resize: none;
 }
-
 
 form textarea{
   height: 100px;
 }
-
 
 .form-group{
   display: flex;
@@ -84,4 +97,11 @@ form textarea{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 10px;
+}
+
+.footer-group{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-self: flex-end;
 }

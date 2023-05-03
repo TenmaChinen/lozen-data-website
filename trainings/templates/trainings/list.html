@@ -10,20 +10,20 @@
 
 {% block content %}
 
-<header>
-  <div class="header-title">Trainings Groups</div>
-  <a id="btn-add" class="btn-link" href="{% url 'trainings:create' %}">Add Group</a>
-</header>
+  <header>
+    <div class="header-title">Trainings Groups</div>
+    <a id="btn-add" class="btn-link" href="{% url 'trainings:create' %}">Add Group</a>
+  </header>
 
-<div class="list-container">
-  
-  {% for training in training_list %}
-    <div class="list-item">
-      <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id %}">{{training.title}}</a>
-      <a class="btn-icon btn-edit" href="{% url 'trainings:update' training.id %}"></a>
-    </div>
-  {% endfor %}
+  <div class="list-container">
     
-</div>
+    {% for training in training_list %}
+      <div class="list-item">
+        <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id %}">{{training.title}}</a>
+        <a class="btn-icon btn-edit" href="{% url 'trainings:update' training.id %}"></a>
+      </div>
+    {% endfor %}
+      
+  </div>
 
 {% endblock %}

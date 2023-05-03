@@ -1,10 +1,11 @@
 .btn-icon{
+  display: inline-block;
   width: 22px;
   height: 22px;
   background-position: center;
   background-repeat: no-repeat;
   background-color: transparent;
-  background-size: cover;
+  background-size: contain;
 }
 
 .btn-icon:hover{
@@ -15,6 +16,8 @@
   scale: 90% 90%;
 }
 
+/*  */
+
 .btn-edit{
   background-image: url('../icons/ic_edit.png');
   filter: contrast(20%);
@@ -22,4 +25,12 @@
 
 .btn-back{
   background-image: url('../icons/ic_back.png');
+}
+
+.btn-upload{
+  background-image: url('../icons/ic_upload.png');
+}
+
+.btn-download{
+  background-image: url('../icons/ic_download.png');
 }

@@ -37,7 +37,6 @@ nav{
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 5px;
 }
 
 .nav-pack a{
@@ -58,15 +57,49 @@ nav{
   padding: 5px;
 }
 
+.nav-pack a.active{
+  background-color: rgb(86, 86, 86);
+}
+
 /* BUTTONS */
 
-.btn-link{
+.btn-link,
+.btn-icon-link{
   background-color: rgb(57, 56, 56);
   text-decoration: none;
-  padding: 10px;
   color: white;
   border-radius: 2px;
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
+}
+
+.btn-link{
+  padding: 10px;
+}
+
+.btn-icon-link{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+
+
+/* UTILS */
+
+.row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }

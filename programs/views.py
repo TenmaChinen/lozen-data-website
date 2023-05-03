@@ -77,4 +77,8 @@ class ProgramUpdateView(UpdateView):
 class ProgramDeleteView(DeleteView):
   model = Program
   template_name = 'programs/delete.html'
-  success_url = reverse_lazy('programs:list')
+
+
+  def get_success_url(self):
+    d_kwargs = { 'training_id' : self.object.training.id }
+    return reverse_lazy('programs:list', kwargs=d_kwargs)

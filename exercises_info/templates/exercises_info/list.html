@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Exercises{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'exercises_info/css/grid-list.css' %}">
+{% endblock %}
+
+
+{% block styles %}
+  <style>
+
+    .btn-icon{
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <header>
+    <div class="header-title">Exercise Info List</div>
+    <div>
+      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:create' %}">Add</a>
+      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:upload' %}">Upload</a>
+      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:download' %}">Download</a>
+    </div>
+  </header>
+
+  <div class="list-container">
+    
+    {% for exercise_info in list_exercise_info %}
+      <div class="list-item">
+        <a class="btn-item-title" href="{% url 'exercises_info:detail' pk=exercise_info.id %}">ID {{exercise_info.id}} : {{exercise_info.title}}</a>
+        <a class="btn-icon btn-edit" href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
+      </div>
+    {% endfor %}
+      
+  </div>
+
+{% endblock %}

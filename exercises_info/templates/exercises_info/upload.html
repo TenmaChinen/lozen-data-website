@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{% url 'exercises_info:list' %}"></a>
+{% endblock %}
+
+{% block title %}Upload Exercise Info{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form-upload.css' %}">
+{% endblock %}
+
+{% block styles %}
+  <style>
+    main {
+      padding: 20px;
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-container">
+
+    <div class="form-header">
+      <div class="form-title">Upload Exercise Info</div>
+    </div>
+
+    <div class="form-body">
+
+      <form id="form" method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label>Raw JSON</label>
+          <textarea name="raw_json">{{raw_json}}</textarea>
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="form-footer">
+      <div></div>
+      <div class="footer-group">
+        <a type="button" class="btn-form" href="{% url 'exercises_info:list' %}">Cancel</a>
+        <button type="submit" form="form" class="btn-form">Save</button>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

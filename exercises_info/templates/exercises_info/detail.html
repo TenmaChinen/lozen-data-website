@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{% url 'exercises_info:list' %}"></a>
+{% endblock %}
+
+{% block title %}Detail Exercise Info{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block styles %}
+  <style>
+    main {
+      padding: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <header>
+    <div class="header-title">Exercise Info Details</div>
+    <div>
+      <a class="btn-link" href="{% url 'exercises_info:update' pk=exercise_info.id %}">Edit</a>
+    </div>
+  </header>
+
+  <div class="detail-title">{{exercise_info.title}}</div>
+
+  <dl>
+
+    <div class="dl-group">
+      <dt>Description :</dt>
+      <dd>{{exercise_info.description|linebreaksbr}}</dd>
+    </div>
+
+  </dl>
+
+{% endblock %}

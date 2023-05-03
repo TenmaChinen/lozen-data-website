@@ -1,11 +1,43 @@
+/* HEADER */
+
 header {
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 20px;
 }
+
+.header-title{
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(69, 69, 69);
+}
+
+.header-group{
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 5px;
+}
+
+/* SUB HEADER */
+.sub-header{
+  display: flex;
+  flex-direction: row;
+  padding : 10px 20px 20px 30px;
+  justify-content: space-between;
+}
+
+.sub-header-title{
+  font-size: 20px;
+  font-weight: bold;
+  color: gray;
+}
+
+
+/* TABLE */
 
 .table-container {
   width: 90%;
@@ -27,8 +59,9 @@ th, td {
 
 th{
   font-size: 13px;
-  padding: 2px 5px 2px 5px;
-  color: rgb(42, 42, 42);
+  padding: 2px 5px 4px 5px;
+  color: rgb(87, 87, 87);
+  vertical-align: bottom;
 }
 
 td{
@@ -52,4 +85,19 @@ th[min]{
 
 th[med]{
   max-width: 60px;
+}
+
+select{
+  color: rgb(68, 68, 68);
+  outline: none;
+  border: 1px solid gray;
+  border-radius: 5px;
+  font-size: 15px;
+  padding: 5px;
+}
+
+
+.btn-edit{
+  width: 18px;
+  height: 18px;
 }
