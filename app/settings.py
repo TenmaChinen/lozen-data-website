@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'programs',
     'exercises',
     'exercises_info',
+    'languages',
 ]
 
 MIDDLEWARE = [

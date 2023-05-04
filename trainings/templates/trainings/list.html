@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 {% endblock %}
 
+
+{% block styles %}
+  <style>
+    main{padding:0px};
+  </style>
+{% endblock styles %}
+  
+
 {% block content %}
 
   <header>
@@ -15,11 +23,22 @@
     <a id="btn-add" class="btn-link" href="{% url 'trainings:create' %}">Add Group</a>
   </header>
 
+  <div class="messages-container">
+    <!-- TODO : Document the messages JINJA2 function -->
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class="message-alert">
+            {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
   <div class="list-container">
     
-    {% for training in training_list %}
+    {% for training in list_training %}
       <div class="list-item">
-        <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id %}">{{training.title}}</a>
+        <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id language_id=1 %}">{{training.title}}</a>
         <a class="btn-icon btn-edit" href="{% url 'trainings:update' training.id %}"></a>
       </div>
     {% endfor %}

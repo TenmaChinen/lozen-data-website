@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{% url 'programs:list' training_id=program.training.id %}"></a>
+  <a class="btn-icon btn-back" href="{% url 'programs:list' training_id language_id %}"></a>
 {% endblock %}
 
 {% block title %}Training Programs{% endblock %}
@@ -15,36 +15,65 @@
 
   <header>
     <div class="header-title">{{program.training.title}} Details</div>
-    <div>
-      <a class="btn-link" href="{% url 'programs:update' pk=program.id %}">Edit</a>
+    <div class="row">
+      <a class="btn-link" href="{% url 'programs:update' program.id language_id %}">Edit</a>
       <a class="btn-link" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}">Exercises</a>
+      {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
     </div>
   </header>
-
-  <div class="detail-title">{{program.title}}</div>
 
   <dl>
 
     <div class="dl-group">
+      <dt>Unique ID :</dt>
+      <dd>{{program.unique_id}}</dd>
+    </div>
+
+    <div class="dl-group">
       <dt>Title :</dt>
-      <dd>{{program.title}}</dd>
+      <dd>{{program_translation.title}}</dd>
     </div>
 
     <div class="dl-group">
       <dt>Description :</dt>
-      <dd>{{program.description|linebreaksbr}}</dd>
+      <dd>{{program_translation.description|linebreaksbr}}</dd>
     </div>
 
     <div class="dl-group">
       <dt>Must Know :</dt>
-      <dd>{{program.must_know|linebreaksbr}}</dd>
+      <dd>{{program_translation.must_know|linebreaksbr}}</dd>
     </div>
 
     <div class="dl-group">
       <dt>Requirements :</dt>
-      <dd>{{program.requirements|linebreaksbr}}</dd>
+      <dd>{{program_translation.requirements|linebreaksbr}}</dd>
     </div>
 
   </dl>
 
 {% endblock %}
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}program_id={{program.id}}&language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('language_selector');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+{% endblock scripts %}
+  

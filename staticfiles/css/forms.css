@@ -105,3 +105,12 @@ form textarea{
   gap: 10px;
   align-self: flex-end;
 }
+
+
+/* Errors */
+
+/* Native class from Django */
+.errorlist{
+  color: red;
+  list-style: none;
+}

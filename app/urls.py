@@ -11,4 +11,5 @@ urlpatterns = [
     path('exercises/', include('exercises.urls')),
     
     path('exercises_info/', include('exercises_info.urls')),
+    path('languages/', include('languages.urls')),
 ]

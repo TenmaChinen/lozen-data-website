@@ -22,11 +22,13 @@
 				{% block btn_back %}{% endblock %}
 				<div class="nav-title">Lozen</div>
 			</div>
+			
 			<div class="nav-pack">
 				
 				{% with request.path as url %}
 					<a href="{% url 'trainings:list' %}" class="{% if 'trainings' in url %}active{% endif %}">Programs</a>
 					<a href="{% url 'exercises_info:list' %}" class="{% if 'exercises_info' in url %}active{% endif %}">Exercises Info</a>	
+					<a href="{% url 'languages:list' %}" class="{% if 'languages' in url %}active{% endif %}">Languages</a>	
 				{% endwith %}
 					
 			</div>

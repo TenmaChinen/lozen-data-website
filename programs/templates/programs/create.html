@@ -10,25 +10,37 @@
 {% block styles %}
   <style>
     main{
-      padding: 20px;
+      padding: 15px;
     }
   </style>
 {% endblock %}
+
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+{% endblock %}
+
 
 {% block content %}
 
   <div class="form-container">
 
-    <div class="form-header">
-      <div class="form-title">Create Training Program</div>
-    </div>
+    {% include 'form-header.html' with title="Create Training Program" %}
 
     <div class="form-body">
 
       <form id="form" method="POST">
         {% csrf_token %}
         
-        {% for field in form %}
+        {% for field in form_program %}
+          <div class="form-group">
+            {{field.errors}}
+            {{field.label_tag}}
+            {{field}}
+          </div>
+        {% endfor %}
+
+        {% for field in form_program_translation %}
           <div class="form-group">
             {{field.label_tag}}
             {{field}}
@@ -38,15 +50,7 @@
       </form>
     </div>
 
-    <div class="form-footer">
-      
-      <div></div>
-      <div class="footer-group">
-        <button type="submit" form="form" class="btn-form" >Create</button>
-        <a type="button" class="btn-form" href="{% url 'programs:list' training_id %}" >Cancel</a>
-      </div>
-      
-    </div>
+    {% include "form-footer-create.html" with url=url_back %}
 
   </div>
 

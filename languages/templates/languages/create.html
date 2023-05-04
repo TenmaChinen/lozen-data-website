@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Language{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+  {% include 'form-header.html' with title="Create Language" %}
+
+  <div class="form-body">
+    <form id="form" method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+    </form>
+  </div>
+
+  {% include "form-footer-create.html" with url=url_back %}
+  
+
+</div>
+
+{% endblock %}

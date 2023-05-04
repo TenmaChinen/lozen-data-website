@@ -4,24 +4,22 @@
 {% block title %}Create Exercise{% endblock %}
 
 {% block links %}
-<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block styles %}
-<style>
-  main {
-    padding: 20px;
-  }
-</style>
+  <style>
+    main {
+      padding: 20px;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
 
 <div class="form-container">
 
-  <div class="form-header">
-    <div class="form-title">Create Exercise</div>
-  </div>
+  {% include 'form-header.html' with title="Create Exercise" %}
 
   <div class="form-body">
     <form id="form" method="POST">

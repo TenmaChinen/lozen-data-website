@@ -19,9 +19,7 @@
 
 <div class="form-container">
 
-  <div class="form-header">
-    <div class="form-title">Create Training Group</div>
-  </div>
+  {% include 'form-header.html' with title="Create Training Group" %}
 
   <div class="form-body">
     <form id="form" method="POST">
@@ -30,13 +28,7 @@
     </form>
   </div>
 
-  <div class="form-footer">
-    <div></div>
-    <div>
-      <a type="button" class="btn-form" href="{% url 'trainings:list' %}">Cancel</a>
-      <button type="submit" form="form" class="btn-form">Create</button>
-    </div>
-  </div>
+  {% include "form-footer-create.html" with url=url_cancel %}
 
 </div>
 

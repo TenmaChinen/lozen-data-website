@@ -36,9 +36,6 @@
       </form>
     </div>
 
-    <div class="form-footer">
-      <a type="button" class="btn-form" href="{% url 'trainings:list' %}">Cancel</a>
-      <button type="submit" form="form" class="btn-form btn-delete">Delete</button>
-  </div>
+    {% include 'form-footer-delete.html' with url=url_cancel %}
 
 {% endblock %}

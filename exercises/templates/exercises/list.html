@@ -2,55 +2,44 @@
 {% load static %}
 
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{% url 'programs:detail' pk=program_id %}"></a>
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
 {% endblock %}
 
 {% block title %}Exercises{% endblock %}
-  
-
-{% block styles %}
-  <style>
-    .btn-icon{
-      width: 25px;
-      height: 25px;
-    }
-  </style>  
-{% endblock styles %}
-  
 
 {% block links %}
   <link rel="stylesheet" href="{% static 'exercises/css/table.css' %}">
 {% endblock %}
 
+{% block styles %}
+<style>
+  .btn-icon{
+    width: 25px;
+    height: 25px;
+  }
+</style>  
+{% endblock styles %}
+
 {% block content %}
 
-<header>
+  <header>
   <div class="header-title">Exercises</div>
   <div class="header-group">
     <a id="btn-add" class="btn-link" href="{% url 'exercises:create' program_id=program_id week=week day=day %}">Create Exercise</a>
     <a id="btn-add" class="btn-icon-link" href="{% url 'exercises:upload' program_id=program_id %}"><i class="btn-icon btn-upload"></i></a>
     <a id="btn-add" class="btn-icon-link"  href="{% url 'exercises:download' program_id=program_id %}"><i class="btn-icon btn-download"></i></a>
   </div>
-</header>
+  </header>
 
-<div class="sub-header">
-  <div class="sub-header-title">{{program.title}}</div>
-  <div class="row">
-    <select id="week_selector" name="week_selector" title="week">
-        {% for option_value, option_label in week_widget.choices %}
-            <option value="{{ option_value }}" {% ifequal option_value week_widget.value %}selected{% endifequal %}>{{ option_label }}</option>
-        {% endfor %}
-    </select>
-    
-    <select id="day_selector" name="day_selector">
-      {% for option_value, option_label in day_widget.choices %}
-          <option value="{{ option_value }}" {% ifequal option_value day_widget.value %}selected{% endifequal %}>{{ option_label }}</option>
-      {% endfor %}
-  </select>
+  <div class="sub-header">
+    <div class="sub-header-title">ID : {{program_unique_id}}</div>
+    <div class="row">
+      {% include 'select-widget.html' with id="week_selector" widget=week_widget %}
+      {% include 'select-widget.html' with id="day_selector" widget=day_widget %}
+    </div>
   </div>
-</div>
 
-<div class="table-container">
+  <div class="table-container">
 
   <table>
 
@@ -92,7 +81,6 @@
 
 {% endblock %}
 
-
 {% block scripts %}
   <script>
     
@@ -101,8 +89,9 @@
       const argDay = selectorDay.value;
       
       const oldUrl = window.location.href;
-      const baseUrl = oldUrl.split('%3F')[0];
-      const newUrl = `${baseUrl}%3Fprogram_id={{program_id}}&week=${argWeek}&day=${argDay}`;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}program_id={{program_id}}&week=${argWeek}&day=${argDay}`;
       
       console.log(oldUrl);
       console.log(newUrl);
@@ -119,6 +108,4 @@
 
   </script>
 
-
 {% endblock scripts %}
-  

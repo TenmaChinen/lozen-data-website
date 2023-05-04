@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block btn_back %}
-  <a class="btn-icon btn-back" href="{% url 'trainings:list' %}"></a>
-{% endblock %}
-
 {% block title %}Training Programs{% endblock %}
 
 {% block links %}
@@ -12,24 +8,74 @@
   <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 {% endblock %}
 
+
+{% block styles %}
+  <style>
+    main{padding:0px};
+  </style>
+{% endblock styles %}
+  
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+{% endblock %}
+
+
 {% block content %}
 
 <header>
   <div class="header-title">Training Programs</div>
-  <a id="btn-add" class="btn-link" href="{% url 'programs:create' training.id %}">Create Program</a>
+  <div class="header-group">
+    <a id="btn-add" class="btn-link" href="{% url 'programs:create' training.id language.id %}">Create Program</a>
+    
+    <!-- TODO : Document how to create select combined with JINJA2 (NO NEED TO USE DOUBLE BRACKETS FOR OBJECTS !!! ) -->
+    {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
+
+  </div>
 </header>
 
 <div class="list-title">{{training.title}}</div>
 
 <div class="list-container">
   
-  {% for program in program_list %}
+  {% for program, program_translation in list_program %}
     <div class="list-item">
-      <a class="btn-item-title" href="{% url 'programs:detail' program.id %}">{{program.title}}</a>
-      <a class="btn-icon btn-edit" href="{% url 'programs:update' program.id %}"></a>
+      <a class="btn-item-title row-sparse-subtitle" href="{% url 'programs:detail' program.id language.id %}">
+          <p>{{program_translation.title|default:"No Title"}}</p>
+          <p class="list-item-subtitle">id<br>{{program.unique_id}}</p>
+      </a>
+      <a class="btn-icon btn-edit" href="{% url 'programs:update' program.id language.id %}"></a>
     </div>
   {% endfor %}
     
 </div>
 
 {% endblock %}
+
+
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}training_id={{training.id}}&language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('language_selector');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+
+{% endblock scripts %}
+  

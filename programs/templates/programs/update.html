@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Update Prgram{% endblock %}
+{% block title %}Update Program{% endblock %}
 
 {% block links %}
-<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block styles %}
-<style>
-  main{
-    padding: 20px;
-  }
-</style>
+  <style>
+    main{
+      padding: 20px;
+    }
+  </style>
 {% endblock %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+{% endblock %}
+
 
 {% block content %}
 
@@ -27,7 +32,15 @@
       <form id="form" method="POST">
         {% csrf_token %}
         
-        {% for field in form %}
+            
+        {% for field in form_program %}
+          <div class="form-group">
+            {{field.label_tag}}
+            {{field}}
+          </div>
+        {% endfor %}
+
+        {% for field in form_program_translation %}
           <div class="form-group">
             {{field.label_tag}}
             {{field}}
@@ -36,15 +49,9 @@
           
       </form>
     </div>
-
-    <div class="form-footer">
-      <a type="button" class="btn-form btn-delete" href="{% url 'programs:delete' pk=program.id %}">Delete</a>
-      <div class="footer-group">
-        <a type="button" class="btn-form" href="{% url 'programs:list' training_id=program.training.id %}">Cancel</a>
-        <button type="submit" form="form" class="btn-form">Save</button>
-      </div>
-    </div>
-
+    
+    {% include "form-footer-update.html" with url_cancel=url_back url_delete=url_delete %}
+ 
   </div>
 
 {% endblock %}

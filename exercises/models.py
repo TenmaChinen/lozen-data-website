@@ -38,3 +38,7 @@ class Exercise(models.Model):
     l_field_name.pop(target_idx)
     l_field_name.insert(target_idx, 'exercise_info_id')
     return l_field_name
+  
+
+  class Meta:
+    ordering = ['week','day','index']

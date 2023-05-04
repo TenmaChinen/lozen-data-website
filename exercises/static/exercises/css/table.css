@@ -6,7 +6,7 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 10px;
 }
 
 .header-title{
@@ -86,16 +86,6 @@ th[min]{
 th[med]{
   max-width: 60px;
 }
-
-select{
-  color: rgb(68, 68, 68);
-  outline: none;
-  border: 1px solid gray;
-  border-radius: 5px;
-  font-size: 15px;
-  padding: 5px;
-}
-
 
 .btn-edit{
   width: 18px;

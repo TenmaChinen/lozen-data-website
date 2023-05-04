@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Languages{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/icons.css' %}">
+{% endblock %}
+
+{% block styles %}
+  <style>
+    main{padding: 0px;}
+    .btn-item-title{cursor:default}
+  </style>
+{% endblock styles %}
+  
+{% block content %}
+
+  <header>
+    <div class="header-title">Languages</div>
+    <a id="btn-add" class="btn-link" href="{% url 'languages:create' %}">Add Language</a>
+  </header>
+
+  <div class="list-container">
+    
+    {% for language in list_language %}
+      <div class="list-item">
+        <div class="btn-item-title">{{language}}</div>
+        <a class="btn-icon btn-edit" href="{% url 'languages:update' pk=language.id %}"></a>
+      </div>
+    {% endfor %}
+      
+  </div>
+
+{% endblock %}

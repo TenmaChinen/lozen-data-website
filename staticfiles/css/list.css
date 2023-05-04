@@ -22,7 +22,7 @@ header{
   align-self: center;
   overflow-y: auto;
   flex-grow: 1;
-  
+  padding-bottom: 200px;
 }
 
 .list-item{
@@ -31,13 +31,19 @@ header{
   background-color: white;
   align-items: center;
   justify-content: space-between;
-  box-shadow: rgba(128, 128, 128, 0.498) 1px 1px 2px;
+  box-shadow: #8080807f 1px 1px 2px;
   border-radius: 5px;
   max-width: 400px;
   width: 90%;
   padding-left: 10px;
   padding-right: 10px;
-  cursor: pointer;
+}
+
+.list-item-subtitle{
+  font-size: 10px;
+  color: gray;
+  margin-right: 10px;
+  text-align: end;
 }
 
 /* .list-item:active{
@@ -52,6 +58,7 @@ header{
   padding-top: 15px;
   padding-bottom: 15px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .list-title{
@@ -59,10 +66,18 @@ header{
   align-self: center;
   color: rgb(255, 255, 255);
   font-weight: bold;
-  margin: 10px;
   background-color: rgb(126, 174, 147);
   border-radius: 5px;
   width: 90%;
   text-align: center;
-  padding: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+
+.row-sparse-subtitle{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
 }

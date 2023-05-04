@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Language{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+  <style>
+    main{
+      padding: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block btn_back %}
+  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-container">
+
+    <div class="form-header">
+      <div class="form-title">Update Language</div>
+    </div>
+
+    <div class="form-body">
+      <form id="form" method="POST">
+        {% csrf_token %}
+          {{form.as_p}}  
+      </form>
+    </div>
+    
+    {% include "form-footer-update.html" with url_cancel=url_back url_delete=url_delete %}
+
+  </div>
+
+{% endblock %}
