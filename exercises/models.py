@@ -10,19 +10,23 @@ class Exercise(models.Model):
   program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='exercises')
   week = models.PositiveSmallIntegerField(choices=L_WEEKS, blank=False,null=False, default=1)
   day = models.PositiveSmallIntegerField(choices=L_DAYS, blank=False,null=False, default=1)
-  index = models.PositiveSmallIntegerField(blank=False, null=False)
-  rounds = models.PositiveSmallIntegerField(blank=True, null=True)
+  idx = models.PositiveSmallIntegerField(blank=False, null=False)
+  sets = models.PositiveSmallIntegerField(blank=False, null=False)
   reps = models.PositiveSmallIntegerField(blank=True, null=True)
   percent = models.PositiveSmallIntegerField(blank=True, null=True)
   power = models.PositiveSmallIntegerField(blank=True, null=True)
   rir = models.PositiveSmallIntegerField(blank=True, null=True)
   rest = models.PositiveSmallIntegerField(blank=True, default=0)
+  version = models.PositiveSmallIntegerField()
 
   def rest_minutes(self):
     return self.rest // 60
   
   def rest_seconds(self):
     return self.rest % 60
+  
+  def rest_format(self):
+    return f'{self.rest_minutes():02d}:{self.rest_seconds():02d}'
   
   # TODO : Document "self._meta.fields" or "self._meta.get_fields()"
   @classmethod
@@ -31,7 +35,7 @@ class Exercise(models.Model):
   
   @classmethod
   def get_csv_fields(cls):
-    l_excluded = ['id', 'program', 'index']
+    l_excluded = ['id', 'program', 'version']
     l_field_name = [ field.name for field in cls._meta.get_fields() if field.name not in l_excluded ]
     
     target_idx = l_field_name.index('exercise_info')
@@ -41,4 +45,5 @@ class Exercise(models.Model):
   
 
   class Meta:
-    ordering = ['week','day','index']
+    unique_together = ('program','week', 'day', 'idx', )
+    ordering = ['week','day','idx']

@@ -4,14 +4,14 @@
 {% block title %}Exercises{% endblock %}
 
 {% block links %}
-  <link rel="stylesheet" href="{% static 'exercises_info/css/grid-list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
 {% endblock %}
 
 
 {% block styles %}
   <style>
-
-    .btn-icon{
+    .ic-download,
+    .ic-upload{
       width: 16px;
       height: 16px;
     }
@@ -22,22 +22,53 @@
 
   <header>
     <div class="header-title">Exercise Info List</div>
-    <div>
-      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:create' %}">Add</a>
-      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:upload' %}">Upload</a>
-      <a id="btn-add" class="btn-link" href="{% url 'exercises_info:download' %}">Download</a>
+    <div class="header-group">
+      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:create' %}"><i class="icon ic-add"></i></a>
+      
+      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:upload' %}">
+        JSON<i class="icon ic-upload"></i>
+      </a>
+      <a class="icon-link" href="{% url 'api:download_exercises_info_json_file' %}">
+        JSON<i class="icon ic-download"></i>
+      </a>
     </div>
   </header>
 
-  <div class="list-container">
-    
-    {% for exercise_info in list_exercise_info %}
-      <div class="list-item">
-        <a class="btn-item-title" href="{% url 'exercises_info:detail' pk=exercise_info.id %}">ID {{exercise_info.id}} : {{exercise_info.title}}</a>
-        <a class="btn-icon btn-edit" href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
-      </div>
-    {% endfor %}
-      
+  {% include 'messages_error.html' %}
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th med>ID</th>
+          <th style="min-width:200px">Title</th>
+          <th med>Ver</th>
+          <th min></th>
+          <th min></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for exercise_info in list_exercise_info %}
+          <tr>
+            <td>{{exercise_info.id}}</td>
+            <td>{{exercise_info.title}}</td>
+            <td>{{exercise_info.version}}</td>
+            <td>
+              {% if exercise_info.version == current_version %}
+              <a class="icon ic-edit"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
+              {% endif %}
+            </td>
+            <td>
+              {% if exercise_info.version == current_version %}
+                <a class="icon ic-delete"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
   </div>
 
 {% endblock %}

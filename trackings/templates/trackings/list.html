@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Table Trackings{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
+  <link rel="stylesheet" href="{% static 'css/icons.css' %}">
+{% endblock %}
+
+
+{% block styles %}
+  <style>
+    main{padding:0px};
+  </style>
+{% endblock styles %}
+  
+
+{% block content %}
+
+  <header>
+    <div class="header-title">Table Trackings</div>
+    <a id="ic-add" class="icon-link {% if is_add_disabled %}disabled{% endif %}" href="{% url 'trackings:create' %}"><i class="icon ic-add"></i><div>Track</div></a>
+  </header>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>State</th>
+          <th>Release Date</th>
+          <th min></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for tracking in list_tracking %}
+          <tr>
+            <td>{{tracking.version}}</td>
+            <td>{{tracking.get_state_display}}</td>
+            <td>{{tracking.release_date|default:"Undefined"}}</td>
+
+            <td>
+              {% if tracking.version == current_version %}
+                <a class="icon ic-edit" href="{% url 'trackings:update' pk=tracking.version %}"></a></td>
+              {% endif %}
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

@@ -7,14 +7,6 @@
   <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block styles %}
-<style>
-  main{
-    padding: 20px;
-  }
-</style>
-{% endblock %}
-
 {% block content %}
 
   <div class="form-container">
@@ -26,14 +18,7 @@
     <div class="form-body">
       <form id="form" method="POST">
         {% csrf_token %}
-        
-        {% for field in form %}
-          <div class="form-group">
-            {{field.label_tag}}
-            {{field}}
-          </div>
-        {% endfor %}
-          
+        {{form.as_p}}
       </form>
     </div>
 

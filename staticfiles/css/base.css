@@ -24,6 +24,7 @@ main{
   flex-grow: 1;
   background-color: rgb(240, 240, 240);
   overflow-y: auto;
+  row-gap: 5px;
 }
 
 /* NAV */
@@ -33,25 +34,32 @@ nav{
   flex-direction: row;
   width: 100%;
   background-color: var(--black-mate);
-  align-items: center;
   justify-content: space-between;
 }
 
-.nav-pack{
+.nav-group{
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
+  height: 100%;
 }
 
-.nav-pack a{
+.nav-group a,
+.nav-group div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nav-link{
   color: white;
   text-decoration: none;
-  font-size: 14px;
-  padding: 10px;
+  font-size: 12px;
+  padding: 8px;
   font-weight: bold;
 }
 
-.nav-pack a:hover{
+.nav-link:hover{
   background-color: rgb(77, 77, 77);
 }
 
@@ -61,14 +69,14 @@ nav{
   padding: 5px;
 }
 
-.nav-pack a.active{
+.nav-group a.active{
   background-color: rgb(86, 86, 86);
 }
 
 /* BUTTONS */
 
 .btn-link,
-.btn-icon-link{
+.icon-link{
   background-color: var(--black-mate);
   text-decoration: none;
   color: white;
@@ -76,27 +84,26 @@ nav{
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
+  padding: 6px 8px 6px 8px;
 }
 
-.btn-link{
-  padding: 10px;
-}
-
-.btn-icon-link{
+.icon-link{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  padding-left: 5px;
-  padding-right: 5px;
+  align-items: center;
+  align-self: stretch;
 }
 
-
-/* SELECTOR */
+.disabled{
+  filter: opacity(30%) !important;
+  pointer-events: none;
+}
 
 .header-select,
 .header-select option {
   color: white;
-  padding: 10px;
+  padding: 6px 8px 6px 8px;
   font-size: 13px;
   font-weight: bold;
   border-radius: 2px;
@@ -130,11 +137,10 @@ nav{
   flex-direction: column;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 20px;
 }
 
 .message-alert{
-  background-color: rgb(244, 77, 77);
+  background-color: rgb(175, 63, 63);
   color: white;
   padding: 10px;
   font-size: 14px;

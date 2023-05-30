@@ -1,4 +1,4 @@
-from programs.models import Program, ProgramTranslation
+from programs.models import Program
 from django import forms
 
 
@@ -6,11 +6,4 @@ class FormProgram(forms.ModelForm):
   
   class Meta:
     model = Program
-    exclude = ('training', )
-
-
-class FormProgramTranslation(forms.ModelForm):
-  
-  class Meta:
-    model = ProgramTranslation
-    exclude = ('program', )
+    exclude = ('training', 'version', )

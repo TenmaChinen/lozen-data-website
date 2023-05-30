@@ -6,7 +6,7 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px 5px 0px 5px;
 }
 
 .header-title{
@@ -26,7 +26,8 @@ header {
 .sub-header{
   display: flex;
   flex-direction: row;
-  padding : 10px 20px 20px 30px;
+  padding : 0px 10px 0px 10px;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -40,34 +41,36 @@ header {
 /* TABLE */
 
 .table-container {
-  width: 90%;
+  width: 95%;
+  flex-grow: 1;
   background-color: white;
   align-self: center;
   overflow-x: auto;
+  margin-bottom: 10px;
+  padding-bottom: 100px;
 }
 
 table {
   width: 100%;
-  padding: 10px;
   border-collapse: collapse;
 }
 
 th, td {
   text-align: center;
-  min-width: 30px;
+  min-width: 5px;
 }
 
 th{
   font-size: 13px;
-  padding: 2px 5px 4px 5px;
+  padding: 6px 5px 6px 5px;
   color: rgb(87, 87, 87);
-  vertical-align: bottom;
+  /* vertical-align: bottom; */
 }
 
 td{
   font-size: 14px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   color: rgb(75, 74, 74);
 }
 
@@ -75,19 +78,20 @@ thead tr {
   background-color: rgb(181, 181, 181);
 }
 
+
 tbody tr:nth-child(odd) {
   background-color: rgb(227, 227, 227);
 }
 
 th[min]{
-  max-width: 40px;
+  max-width: 10px;
 }
 
 th[med]{
   max-width: 60px;
 }
 
-.btn-edit{
+.ic-edit{
   width: 18px;
   height: 18px;
 }

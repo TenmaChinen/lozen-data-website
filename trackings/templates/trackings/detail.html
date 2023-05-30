@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Tracking{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block btn_back %}
+  <a class="icon ic-back" href="{% url 'trackings:list' %}"></a>
+{% endblock %}
+
+{% block content %}
+
+<div class="dl-container">
+  <dl>
+    
+    <div class="row">
+      <div class="dl-group flat">
+        <dt>Version :</dt>
+        <dd>{{tracking.version}}</dd>
+      </div>
+  
+      <div class="dl-group flat">
+        <dt>Release :</dt>
+        <dd>{{tracking.release}}</dd>
+      </div>
+    </div>
+
+    <div class="dl-group">
+      <dt>Exercise Info :</dt>
+      <dd>{{tracking.exercise_info|linebreaksbr}}</dd>
+    </div>
+
+    <div class="dl-group">
+      <dt>Training :</dt>
+      <dd>{{tracking.training|linebreaksbr}}</dd>
+    </div>
+
+    <div class="dl-group">
+      <dt>Program :</dt>
+      <dd>{{tracking.program|linebreaksbr}}</dd>
+    </div>
+
+    <div class="dl-group">
+      <dt>Program Translation :</dt>
+      <dd>{{tracking.program_translation|linebreaksbr}}</dd>
+    </div>
+
+    <div class="dl-group">
+      <dt>Exercise :</dt>
+      <dd>{{tracking.exercise|linebreaksbr}}</dd>
+    </div>
+
+  </dl>
+</div>
+
+{% endblock %}

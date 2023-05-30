@@ -8,38 +8,28 @@
 {% endblock %}
 
 {% block styles %}
-  <style>
-    main{
-      padding: 20px;
-    }
-  </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="form-container">
+<div class="form-container">
 
-    <div class="form-header">
-      <div class="form-title">Delete Program ?</div>
-    </div>
-
-    <div class="form-body">
-      <form id="form" method="POST">
-        {% csrf_token %}
-        
-        <div class="form-group">
-          <label>Title</label>
-          {{program.title}}
-        </div>
-          
-      </form>
-    </div>
-
-    <div class="form-footer">
-      <a type="button" class="btn-form" href="{% url 'programs:list' training_id=program.training.id %}">Cancel</a>
-      <a type="button" class="btn-form btn-delete" href="{% url 'programs:delete' pk=program.id %}">Delete</a>
-    </div>
-
+  <div class="form-header">
+    <div class="form-title">Delete Program ?</div>
   </div>
+
+  <div class="form-body">
+    <form id="form" method="POST">
+      {% csrf_token %}
+      <p>
+        <label>Unique ID :</label>
+        {{program.unique_id}}
+      </p>
+    </form>
+  </div>
+
+  {% include 'form-footer-delete.html' with url=url_back %}
+
+</div>
 
 {% endblock %}

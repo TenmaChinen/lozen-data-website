@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Tracking{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+  main{
+    padding: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+  {% include 'form-header.html' with title="Create Table Tracking" %}
+
+  <div class="form-body">
+    <form id="form" method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+    </form>
+  </div>
+
+  {% include "form-footer-create.html" with url=url_cancel %}
+
+</div>
+
+{% endblock %}

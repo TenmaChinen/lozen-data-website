@@ -1,0 +1,54 @@
+# BUGS :
+
+🔴 When adding exercises - Show error if "exercise_info_id" doesn't exists 🔴
+🔴 ADD LANGUAGES TO TRACKING !! Android App needs Languages Table!!! 🔴
+
+Think how to manage deleted Rows
+🟡🟢🔴
+
+ [ Django every database change action ]
+    1. 🟢 "Tracking" table has [ "version", "state", "release_date" ]
+    2. 🟡 Next tables must contain a field called "version":
+        · 🟢 "Exercise Info"          · 🔴 "Exercises Info Translation
+        · 🟢 "Trainings"              · 🟢 "Programs"
+        · 🟢 "Programs Translations"  · 🟢 "Exercises"
+
+        2.1. 🟢 The "version" column set to last "Tracking" version with "state"="No released".
+        2.2. 🟢 If "state"=True or is older "version", the "Exercises" <updates> & <deletes> will not be allowed.
+            ( Prevent from program change needed exercises that are linked to user's historic )
+            · 🟢 Show Edit buttons as disabled
+            · 🟢 Show Delete buttons as disabled
+        2.3. Other tables except "Exercises" will allow <update> & <delete> for the new version as state="Released"
+
+        2.4. 🟢 If No last Tracking version with "state"="No released", then do not allow any new row. ( Important )
+            · 🟢 Show create buttons as disabled
+
+    3. Tracking Table:
+        3.1. 🟢 "version" field must be set as last "Trackings" Version.
+        3.2. Use a "release" button in the Table that takes to "release" view that acts like "update" view to release the Tracking.
+        3.3. 🟢 Release date automatically set at the moment of submit "release".
+
+    4. Exercises :
+        4.1. Upload should only update or create exercises, never delete
+        4.2. After saving new CSV show updated rows in green.
+
+ [ Android APP & Django Database Interaction ]
+
+    1. Android GET request to Django API "download_changes" (keep cookies and headers!!)
+    2. Android POST request to Django API ( local "version" value | default = 0 )
+    3. Django API check if version :
+        3.1. If both same "version" -> Return Empty
+        3.2. If Different "version" -> Filter data by version > current version
+        3.3. Create single JSON with non empty fields:
+            1. last_version
+            2. "Exercise Info"
+            3. "Exercise Info Translation"
+            4. "Training"
+            5. "Program"
+            6. "Program Translation"
+            7. "Exercise"
+
+        3.4. Return the whole JSON.
+        3.5. Only iterate the Table names available in the App contains ( in case is old version of the App )
+        3.6. Use "UPDATE" action in SQLite -> If returns "0" then use "CREATE" action.
+        3.7. Save the last "version" value at the end of saving every change.

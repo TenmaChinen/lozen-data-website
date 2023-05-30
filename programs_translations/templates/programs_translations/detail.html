@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block btn_back %}
+  <a class="icon ic-back" href="{{url_back}}"></a>
+{% endblock %}
+
+{% block title %}Training Programs{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <header>
+    <div class="header-title">{{program.training.title}} Details</div>
+    <div class="row">
+      <a class="btn-link" href="{% url 'programs_translations:update' program.id language_id %}">Edit</a>
+      <a class="btn-link" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}">Exercises</a>
+      {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
+    </div>
+  </header>
+
+  <div class="dl-container">
+    <dl>
+      <div class="dl-group flat">
+        <dt>Unique ID :</dt>
+        <dd>{{program.unique_id}}</dd>
+      </div>
+
+      <div class="dl-group flat">
+        <dt>Title :</dt>
+        <dd>{{program_translation.title}}</dd>
+      </div>
+
+      <div class="dl-group">
+        <dt>Description :</dt>
+        <dd>{{program_translation.description|linebreaksbr}}</dd>
+      </div>
+
+      <div class="dl-group">
+        <dt>Must Know :</dt>
+        <dd>{{program_translation.must_know|linebreaksbr}}</dd>
+      </div>
+
+      <div class="dl-group">
+        <dt>Requirements :</dt>
+        <dd>{{program_translation.requirements|linebreaksbr}}</dd>
+      </div>
+
+    </dl>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}program_id={{program.id}}&language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('language_selector');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+{% endblock scripts %}
+  

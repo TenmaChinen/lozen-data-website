@@ -1,36 +1,54 @@
-.btn-icon{
+.icon {
   display: inline-block;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   background-position: center;
   background-repeat: no-repeat;
   background-color: transparent;
   background-size: contain;
 }
 
-.btn-icon:hover{
+.icon:hover {
   filter: contrast(50%);
 }
 
-.btn-icon:active{
+.icon:active {
   scale: 90% 90%;
 }
 
 /*  */
 
-.btn-edit{
+.ic-edit {
   background-image: url('../icons/ic_edit.png');
-  filter: contrast(20%);
+  filter: contrast(0.3);
 }
 
-.btn-back{
+.ic-back {
   background-image: url('../icons/ic_back.png');
 }
 
-.btn-upload{
+.ic-upload {
   background-image: url('../icons/ic_upload.png');
 }
 
-.btn-download{
+.ic-download {
   background-image: url('../icons/ic_download.png');
 }
+
+.ic-add {
+  background-image: url('../icons/ic_add.png');
+}
+
+.ic-language {
+  background-image: url('../icons/ic_language.png');
+}
+
+.ic-delete {
+  background-image: url('../icons/ic_delete.png');
+  filter: contrast(0.3);
+}
+
+.ic-search {
+  background-image: url('../icons/ic_search.png');
+}
+

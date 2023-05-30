@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Release Tracking{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-container">
+
+    <div class="form-header">
+      <div class="form-title">Release Tracking</div>
+    </div>
+
+    <div class="form-body">
+
+      <form id="form" action="" method="POST">
+        {% csrf_token %}
+          {{form.as_p}}
+      </form>
+
+    </div>
+
+    <div class="form-footer">
+      
+      <div></div>
+      <div class="footer-group">
+        <a type="button" class="btn-form" href="{% url 'trackings:list' %}">Cancel</a>
+        <button type="submit" form="form" class="btn-form">Release</button>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

@@ -7,16 +7,6 @@
   <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block styles %}
-
-  <style>
-    main{
-      padding: 20px;
-    }
-  </style>
-
-{% endblock %}
-
 {% block content %}
 
   <div class="form-container">
@@ -36,6 +26,6 @@
       </form>
     </div>
 
-    {% include 'form-footer-delete.html' with url=url_cancel %}
+    {% include 'form-footer-delete.html' with url=url_back %}
 
 {% endblock %}

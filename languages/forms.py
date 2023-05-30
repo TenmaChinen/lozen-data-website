@@ -6,7 +6,7 @@ class LanguageForm(forms.ModelForm):
   
   class Meta:
     model = Language
-    fields = '__all__'
+    fields = ('id',)
 
 
   @classmethod

@@ -20,26 +20,20 @@
 
   <header>
     <div class="header-title">Trainings Groups</div>
-    <a id="btn-add" class="btn-link" href="{% url 'trainings:create' %}">Add Group</a>
+    <a id="ic-add" class="btn-link" href="{% url 'trainings:create' %}">Add Group</a>
   </header>
 
-  <div class="messages-container">
-    <!-- TODO : Document the messages JINJA2 function -->
-    {% for message in messages %}
-      {% if message.tags == 'error' %}
-        <div class="message-alert">
-            {{ message }}
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
+  {% include 'messages_error.html' %}
 
   <div class="list-container">
     
     {% for training in list_training %}
       <div class="list-item">
         <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id language_id=1 %}">{{training.title}}</a>
-        <a class="btn-icon btn-edit" href="{% url 'trainings:update' training.id %}"></a>
+        <div class="row">
+          <div>(V{{training.version}})</div>
+          <a class="icon ic-edit" href="{% url 'trainings:update' training.id %}"></a>
+        </div>
       </div>
     {% endfor %}
       

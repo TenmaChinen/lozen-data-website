@@ -19,15 +19,17 @@
 
   <header>
     <div class="header-title">Languages</div>
-    <a id="btn-add" class="btn-link" href="{% url 'languages:create' %}">Add Language</a>
+    <a id="ic-add" class="btn-link" href="{% url 'languages:create' %}">Add Language</a>
   </header>
+
+  {% include 'messages_error.html' %}
 
   <div class="list-container">
     
     {% for language in list_language %}
       <div class="list-item">
         <div class="btn-item-title">{{language}}</div>
-        <a class="btn-icon btn-edit" href="{% url 'languages:update' pk=language.id %}"></a>
+        <a class="icon ic-edit" href="{% url 'languages:update' pk=language.id %}"></a>
       </div>
     {% endfor %}
       

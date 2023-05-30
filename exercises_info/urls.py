@@ -10,6 +10,4 @@ urlpatterns = [
 	path('update/<int:pk>',views.ExerciseInfoUpdateView.as_view(), name='update'),
 	path('delete/<int:pk>',views.ExerciseInfoDeleteView.as_view(), name='delete'),
 	path('upload',views.exercise_info_upload_view, name='upload'),
-	
-	path('download',views.exercise_info_download, name='download'),
 ]

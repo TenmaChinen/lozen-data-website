@@ -1,25 +1,30 @@
-from typing import Any, Dict, Optional, Type
 from django.forms.models import BaseModelForm
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.views.generic import ListView, DetailView
-
-from programs.models import Program, ProgramTranslation
-from exercises.forms import ExerciseForm
-from exercises.models import Exercise
 from django.http import HttpResponse
-
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic import ListView
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.shortcuts import render
 from io import StringIO
 import pandas as pd
 
-# Create
+from exercises.forms import ExerciseForm
+from exercises.models import Exercise
+from trackings.models import Tracking
+from programs.models import Program
 
+
+###############################
+#######   C R E A T E   #######
+###############################
 
 class ExerciseCreateView(CreateView):
     form_class = ExerciseForm
     template_name = 'exercises/create.html'
+
+    def dispatch(self, request, *args, **kwargs):
+      if Tracking.is_last_version_released():
+          return redirect(self.success_url)
+      return super().dispatch(request, *args, **kwargs)
 
     # TODO : Document the "get_initial" override to initialize forms
     def get_initial(self):
@@ -33,18 +38,22 @@ class ExerciseCreateView(CreateView):
         context.update(self.kwargs)  # week & day
         return context
 
-    # TODO : Document how to re-insert excluded form fields
+    def form_invalid(self, form):
+        # import pdb; pdb.set_trace()
+        return super().form_invalid(form)
+
     def form_valid(self, form):
         form.instance.program_id = self.kwargs['program_id']
         week, day = self.kwargs['week'], self.kwargs['day']
         exercises = Exercise.objects.filter(week=week, day=day)
         if exercises.exists():
-            new_index = exercises.latest('index').index + 1
+            new_index = exercises.latest('idx').idx + 1
         else:
             new_index = 1
 
-        form.instance.index = new_index
+        form.instance.idx = new_index
         form.instance.rest = form.cleaned_data['rest']
+        form.instance.version = Tracking.get_last_version()
 
         return super().form_valid(form)
 
@@ -58,7 +67,10 @@ class ExerciseCreateView(CreateView):
         return reverse_lazy('exercises:list', kwargs=d_kwargs)
 
 
-# Read
+###############################
+#########   L I S T   #########
+###############################
+
 class ExerciseListView(ListView):
     model = Exercise
     template_name = 'exercises/list.html'
@@ -86,9 +98,10 @@ class ExerciseListView(ListView):
         day_widget.value = self.kwargs['day']
 
         program_id = self.kwargs['program_id']
-        url_back = reverse_lazy('programs:detail', kwargs=dict(language_id=1, program_id=program_id))
+        url_back = reverse_lazy('programs_translations:detail', kwargs=dict(language_id=1, program_id=program_id))
         program_unique_id = Program.objects.get(id=program_id).unique_id
         context.update(dict(
+            current_version = Tracking.get_last_version(),
             program_unique_id=program_unique_id,
             week_widget=week_widget,
             day_widget=day_widget,
@@ -96,13 +109,22 @@ class ExerciseListView(ListView):
 
         return context
 
-# Update
-
+###############################
+#######   U P D A T E   #######
+###############################
 
 class ExerciseUpdateView(UpdateView):
     model = Exercise
     form_class = ExerciseForm
     template_name = 'exercises/update.html'
+
+    def dispatch(self, request, *args, **kwargs):
+      if Tracking.is_last_version_released():
+            exercise = Exercise.objects.get(pk=self.kwargs['pk'])
+            d_kwargs = dict(program_id=exercise.program.id, week=exercise.week, day=exercise.day)
+            url_back = reverse_lazy('exercises:list', kwargs=d_kwargs)
+            return redirect(url_back)
+      return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         week, day = self.object.week, self.object.day
@@ -143,8 +165,10 @@ class ExerciseUpdateView(UpdateView):
         return context
     
 
+###############################
+#######   D E L E T E   #######
+###############################
 
-# Delete
 class ExerciseDeleteView(DeleteView):
     model = Exercise
     template_name = 'exercises/delete.html'
@@ -158,14 +182,20 @@ class ExerciseDeleteView(DeleteView):
 
         return reverse_lazy('exercises:list', kwargs=d_kwargs)
 
+###############################
+#######   U P L O A D   #######
+###############################
 
 def exercise_upload_view(request, program_id):
 
     program = Program.objects.get(id=program_id)
-
+    
+    ###################
+    ####   G E T   ####
+    ###################
     if request.method == 'GET':
         list_exercise = Exercise.objects.filter(program_id=program_id)
-        list_exercise = list_exercise.order_by('week', 'day', 'index')
+        list_exercise = list_exercise.order_by('week', 'day', 'idx')
 
         l_field_name = Exercise.get_csv_fields()
         exercise_values = list_exercise.values(*l_field_name)
@@ -180,55 +210,47 @@ def exercise_upload_view(request, program_id):
 
         return render(request, 'exercises/upload.html', context)
 
+    ###################
+    ###   P O S T   ###
+    ###################
     else:
 
         raw_csv = request.POST['raw_csv']
         raw_csv_io = StringIO(raw_csv)
         df_exercises = pd.read_csv(raw_csv_io)
-        df_exercises.sort_values(by=['week', 'day'], inplace=True)
+        df_exercises.sort_values(by=['week', 'day', 'idx'], inplace=True)
 
+        queryset = Exercise.objects.filter(program_id=program_id)
+        l_pack = [ [int(w), int(d), int(i)] for w,d,i in queryset.values_list('week','day','idx') ]
+        index_filter = df_exercises.apply( lambda row : [row.week, row.day, row['idx']] in l_pack, axis=1 )
+        df_exercises_old = df_exercises[index_filter]
+        df_exercises_new = df_exercises[-index_filter]
+
+        # Update old rows
+        last_version = Tracking.get_last_version()
+        import pdb; pdb.set_trace()        
+    
+        for _, row in df_exercises_old.iterrows():
+            d_row = row[['week','day','idx']].to_dict()
+            instance = Exercise.objects.get(program_id=program_id, **d_row)
+            for key, value in row.drop(['week','day','idx']).to_dict().items():
+                setattr(instance, key, value )
+            instance.version = last_version
+            instance.save()
+
+        # Save New Rows
         l_instances = []
-        index, last_week, last_day = 1, None, None
-
-        # TODO : Document delete all in Django
-        Exercise.objects.all().delete()
-
-        for idx, row in df_exercises.iterrows():
+        for _, row in df_exercises_new.iterrows():
             d_row = row.to_dict()
 
-            instance = Exercise(program_id=program_id, index=index, **d_row)
+            instance = Exercise(program_id=program_id, **d_row)
+            instance.version = last_version
             l_instances.append(instance)
-
-            if row.week != last_week or row.day != last_day:
-                index = 1
-                last_week = row.week
-                last_day = row.day
-            else:
-                index += 1
-
-            # print(f'week : {row.week} | Day : {row.day} | idx : {index}')
+        
+        Exercise.objects.bulk_create(l_instances)
+        
 
         # TODO : Document the "Model.objects.bulk_create"
         # ( fast way to create multiple instances without using save() per each instance )
-        Exercise.objects.bulk_create(l_instances)
 
         return redirect('exercises:list', program_id=program_id, week=1, day=1)
-
-
-def exercise_download(request, program_id):
-    if request.method == 'GET':
-        response = HttpResponse(content_type='text/csv')
-        file_name = f'program_exercises_id_{program_id}.csv'
-        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-        exercises = Exercise.objects.filter(program_id=program_id)
-
-        l_field_name = Exercise.get_csv_fields()
-        exercises_values = exercises.values(*l_field_name)
-
-        df_exercises = pd.DataFrame.from_records(
-            data=exercises_values, columns=l_field_name)
-        raw_csv = df_exercises.to_csv(index=False)
-        response.write(raw_csv)
-
-        return response

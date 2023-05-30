@@ -5,6 +5,7 @@ class ExerciseInfo(models.Model):
   id = models.PositiveIntegerField(primary_key=True)
   title = models.CharField(max_length=32)
   description = models.TextField(blank=True, default='')
+  version = models.PositiveSmallIntegerField(blank=False, null=False)
 
   def __str__(self):
     return self.title

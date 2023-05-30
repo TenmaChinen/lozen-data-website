@@ -4,55 +4,95 @@
 {% block title %}Training Programs{% endblock %}
 
 {% block links %}
-  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
   <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 {% endblock %}
 
-
 {% block styles %}
   <style>
-    main{padding:0px};
+    main{
+      padding:0px;
+    }
+    th .ic-language{
+      filter: invert(0.7) !important;
+    }
   </style>
-{% endblock styles %}
+{% endblock %}
   
 
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
 
 {% block content %}
 
-<header>
-  <div class="header-title">Training Programs</div>
-  <div class="header-group">
-    <a id="btn-add" class="btn-link" href="{% url 'programs:create' training.id language.id %}">Create Program</a>
+  <header>
     
-    <!-- TODO : Document how to create select combined with JINJA2 (NO NEED TO USE DOUBLE BRACKETS FOR OBJECTS !!! ) -->
-    {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
-
-  </div>
-</header>
-
-<div class="list-title">{{training.title}}</div>
-
-<div class="list-container">
-  
-  {% for program, program_translation in list_program %}
-    <div class="list-item">
-      <a class="btn-item-title row-sparse-subtitle" href="{% url 'programs:detail' program.id language.id %}">
-          <p>{{program_translation.title|default:"No Title"}}</p>
-          <p class="list-item-subtitle">id<br>{{program.unique_id}}</p>
-      </a>
-      <a class="btn-icon btn-edit" href="{% url 'programs:update' program.id language.id %}"></a>
+    <div class="header-group wrap">
+      <p class="header-title">Programs</p>
+      <p class="header-subtitle">{{training.title}} </p>
     </div>
-  {% endfor %}
+
+    <div class="header-group">
+      <a id="ic-add" class="icon-link" href="{% url 'programs:create' training.id %}"><i class="icon ic-add"></i></a>
+      
+      <!-- TODO : Document how to create select combined with JINJA2 (NO NEED TO USE DOUBLE BRACKETS FOR OBJECTS !!! ) -->
+      {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
+
+    </div>
+  </header>
+
+  {% include 'messages_error.html' %}
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:200px">Unique ID</th>
+          <th med>Translation</th>
+          <th med>Ver</th>
+          <th min>E</th>
+          <th min><i class="icon ic-language"></i></th>
+          <th min></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for program, program_translation in list_program %}
+          <tr>
+            <td><a href="{% url 'programs:detail' pk=program.id %}">{{program.unique_id}}</a></td>
+            <td><a href="{% url 'programs_translations:detail' program.id language.id %}">{{program_translation.title|default:"Undefined"}}</a></td>
+            <td>{{program.version}}</td>
+            <td><a class="icon ic-edit"  href="{% url 'programs:update' pk=program.id %}"></a></td>
+            <td><a class="icon ic-edit"  href="{% url 'programs_translations:update' program_translation.id language.id %}"></a></td>
+            <td>
+              {% if program.version == current_version %}
+                <a class="icon ic-delete"  href="{% url 'programs:delete' pk=program.id %}"></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="list-container">
     
-</div>
+    {% for program, program_translation in list_program %}
+      <div class="list-item">
+        <a class="btn-item-title row-sparse-subtitle" href="{% url 'programs:detail' program.id %}">
+            <p>{{program_translation.title|default:"Undefined"}}</p>
+            <p class="list-item-subtitle">id<br>{{program.unique_id}}</p>
+        </a>
+        <a class="icon ic-edit" href="{% url 'programs:update' program.id %}"></a>
+      </div>
+    {% endfor %}
+      
+  </div>
 
 {% endblock %}
-
-
 
 {% block scripts %}
   <script>

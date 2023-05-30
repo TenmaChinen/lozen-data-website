@@ -17,7 +17,7 @@
 
 
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
 
@@ -32,21 +32,14 @@
       <form id="form" method="POST">
         {% csrf_token %}
         
-        {% for field in form_program %}
+        {% for field in form %}
           <div class="form-group">
             {{field.errors}}
             {{field.label_tag}}
             {{field}}
           </div>
         {% endfor %}
-
-        {% for field in form_program_translation %}
-          <div class="form-group">
-            {{field.label_tag}}
-            {{field}}
-          </div>
-        {% endfor %}
-          
+                  
       </form>
     </div>
 

@@ -16,19 +16,20 @@
 		{% block styles %}{% endblock %}
 
 	</head>
+	
 	<body>
 		<nav>
-			<div class="nav-pack">
-				{% block btn_back %}{% endblock %}
+			<div class="nav-group">
+				<div>{% block btn_back %}{% endblock %}</div>
 				<div class="nav-title">Lozen</div>
 			</div>
 			
-			<div class="nav-pack">
-				
+			<div class="nav-group">
 				{% with request.path as url %}
-					<a href="{% url 'trainings:list' %}" class="{% if 'trainings' in url %}active{% endif %}">Programs</a>
-					<a href="{% url 'exercises_info:list' %}" class="{% if 'exercises_info' in url %}active{% endif %}">Exercises Info</a>	
-					<a href="{% url 'languages:list' %}" class="{% if 'languages' in url %}active{% endif %}">Languages</a>	
+					<a href="{% url 'trainings:list' %}" class="nav-link {% if 'trainings' in url %}active{% endif %}"><div>Programs</div></a>
+					<a href="{% url 'exercises_info:list' %}" class="nav-link {% if 'exercises_info' in url %}active{% endif %}"><div>Exercises Info</div></a>	
+					<a href="{% url 'trackings:list' %}" class="nav-link {% if 'trackings' in url %}active{% endif %}"><div>Trackings</div></a>	
+					<a href="{% url 'languages:list' %}" class="nav-link {% if 'languages' in url %}active{% endif %}"><i class="icon ic-language"></i></a>	
 				{% endwith %}
 					
 			</div>

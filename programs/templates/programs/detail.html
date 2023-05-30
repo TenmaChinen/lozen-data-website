@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{% url 'programs:list' training_id language_id %}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
 {% block title %}Training Programs{% endblock %}
@@ -16,40 +16,19 @@
   <header>
     <div class="header-title">{{program.training.title}} Details</div>
     <div class="row">
-      <a class="btn-link" href="{% url 'programs:update' program.id language_id %}">Edit</a>
+      <a class="btn-link" href="{% url 'programs:update' program.id%}">Edit</a>
       <a class="btn-link" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}">Exercises</a>
-      {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
     </div>
   </header>
 
-  <dl>
-
-    <div class="dl-group">
-      <dt>Unique ID :</dt>
-      <dd>{{program.unique_id}}</dd>
-    </div>
-
-    <div class="dl-group">
-      <dt>Title :</dt>
-      <dd>{{program_translation.title}}</dd>
-    </div>
-
-    <div class="dl-group">
-      <dt>Description :</dt>
-      <dd>{{program_translation.description|linebreaksbr}}</dd>
-    </div>
-
-    <div class="dl-group">
-      <dt>Must Know :</dt>
-      <dd>{{program_translation.must_know|linebreaksbr}}</dd>
-    </div>
-
-    <div class="dl-group">
-      <dt>Requirements :</dt>
-      <dd>{{program_translation.requirements|linebreaksbr}}</dd>
-    </div>
-
-  </dl>
+  <div class="dl-container">
+    <dl>
+      <div class="dl-group flat">
+        <dt>Unique ID :</dt>
+        <dd>{{program.unique_id}}</dd>
+      </div>
+    </dl>
+  </div>
 
 {% endblock %}
 

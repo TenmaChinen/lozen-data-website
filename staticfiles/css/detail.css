@@ -1,19 +1,19 @@
-header{
+header {
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 5px 5px 0px 5px;
 }
 
-.header-title{
+.header-title {
   font-size: 18px;
   font-weight: bold;
   color: rgb(69, 69, 69);
 }
 
-.detail-title{
+.detail-title {
   font-size: 20px;
   align-self: center;
   color: rgb(255, 255, 255);
@@ -26,34 +26,48 @@ header{
   padding: 10px;
 }
 
-/* Definition List ( Container ) */
-
-dl{
-  padding-left: 20px;
-  padding-right: 20px;
+.dl-container {
+  width: 100%;
   overflow-y: auto;
-  padding-top: 10px;
   padding-bottom: 300px;
 }
 
+/* Definition List */
+
+dl {
+  margin-left: auto;
+  margin-right: auto; 
+  width: 95%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  overflow-y: hidden;
+}
+
 /* Definition Term ( Label ) */
-dt{
+dt {
   color: rgb(92, 92, 92);
   font-weight: bold;
   font-size: 15px;
 }
 
 /* Definition Description ( Text ) */
-dd{
+dd {
   color: rgb(86, 86, 86);
   text-indent: 0px;
   font-size: 14px;
-  margin: 10px 10px 10px 10px;
+  margin: 5px 5px 5px 5px;
 }
 
-.dl-group{
+.dl-group {
   background-color: white;
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+
+.flat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

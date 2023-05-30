@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Tracking{% endblock %}
+
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-container">
+
+    <div class="form-header">
+      <div class="form-title">Delete Table Tracking</div>
+    </div>
+
+    <div class="form-body">
+      <form id="form" method="POST">
+        {% csrf_token %}
+        
+        <p>
+          <label>Table Code :</label> {{tracking}} ( {{tracking.table_code}} )
+        </p>
+          
+      </form>
+    </div>
+
+    {% include 'form-footer-delete.html' with url=url_back %}
+
+{% endblock %}

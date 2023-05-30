@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-ayavt34_3)@im13fw5jdfy(cx71-*n6884&rjwh)f--u7kti!_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'teslachinen.pythonanywhere.com' ]
+ALLOWED_HOSTS = [
+     '127.0.0.1',
+     'teslachinen.pythonanywhere.com',
+     '192.168.1.39'
+     ]
 
 
 # Application definition
@@ -39,9 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'trainings',
     'programs',
+    'programs_translations',
     'exercises',
     'exercises_info',
     'languages',
+    'api',
+    'trackings'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +142,19 @@ STATICFILES_DIRS = [ BASE_DIR / 'staticfiles',]
 # ADDED TO GET CSS STYLES AND RESOURCES FROM STATIC FOLDER
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+
+
+
+#################
+## Allow HTTPS ##
+#################
+
+# TODO : Document this in future when you use a custom domain that will need a HTTPS
+
+# # Set the secure SSL redirect to true
+# SECURE_SSL_REDIRECT = True
+
+# # Set the session cookie and CSRF cookie to secure
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True

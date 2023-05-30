@@ -7,18 +7,9 @@
   <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block styles %}
-  <style>
-    main{
-      padding: 20px;
-    }
-  </style>
-{% endblock %}
-
 {% block btn_back %}
-  <a class="btn-icon btn-back" href="{{url_back}}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
-
 
 {% block content %}
 
@@ -31,22 +22,7 @@
     <div class="form-body">
       <form id="form" method="POST">
         {% csrf_token %}
-        
-            
-        {% for field in form_program %}
-          <div class="form-group">
-            {{field.label_tag}}
-            {{field}}
-          </div>
-        {% endfor %}
-
-        {% for field in form_program_translation %}
-          <div class="form-group">
-            {{field.label_tag}}
-            {{field}}
-          </div>
-        {% endfor %}
-          
+          {{form.as_p}}          
       </form>
     </div>
     

@@ -4,13 +4,20 @@ header{
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
+  padding: 10px;
 }
 
 .header-title{
   font-size: 18px;
   font-weight: bold;
-  color: rgb(69, 69, 69);
+  color: #454545;
+}
+
+.header-group{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
 }
 
 .list-container{
