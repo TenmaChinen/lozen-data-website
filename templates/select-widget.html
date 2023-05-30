@@ -1,5 +1,5 @@
 <select id="{{id}}" name="{{id}}" class="header-select">
 	{% for value, label in widget.choices %}
-		<option class="header-option" value="{{value}}" {% ifequal value widget.value %}selected{% endifequal %}>{{label}}</option>
+		<option class="header-option" value="{{value}}" {% if value == widget.value %}selected{% endif %}>{{label}}</option>
 	{% endfor %}
 </select>
