@@ -39,7 +39,6 @@ class ExerciseCreateView(CreateView):
         return context
 
     def form_invalid(self, form):
-        # import pdb; pdb.set_trace()
         return super().form_invalid(form)
 
     def form_valid(self, form):
@@ -227,8 +226,7 @@ def exercise_upload_view(request, program_id):
         df_exercises_new = df_exercises[-index_filter]
 
         # Update old rows
-        last_version = Tracking.get_last_version()
-        import pdb; pdb.set_trace()        
+        last_version = Tracking.get_last_version()    
     
         for _, row in df_exercises_old.iterrows():
             d_row = row[['week','day','idx']].to_dict()
