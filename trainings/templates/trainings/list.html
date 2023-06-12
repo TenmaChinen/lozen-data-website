@@ -4,14 +4,20 @@
 {% block title %}Trainings{% endblock %}
 
 {% block links %}
-  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
   <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 {% endblock %}
 
 
 {% block styles %}
   <style>
-    main{padding:0px};
+    main{
+      padding:0px
+    }
+    
+    th .ic-language{
+      filter: invert(0.7) !important;
+    }
   </style>
 {% endblock styles %}
   
@@ -25,18 +31,37 @@
 
   {% include 'messages_error.html' %}
 
-  <div class="list-container">
-    
-    {% for training in list_training %}
-      <div class="list-item">
-        <a class="btn-item-title" href="{% url 'programs:list' training_id=training.id language_id=1 %}">{{training.title}}</a>
-        <div class="row">
-          <div>(V{{training.version}})</div>
-          <a class="icon ic-edit" href="{% url 'trainings:update' training.id %}"></a>
-        </div>
-      </div>
-    {% endfor %}
-      
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:200px">Unique ID</th>
+          <th med>Translation</th>
+          <th med>Ver</th>
+          <th min>E</th>
+          <th min><i class="icon ic-language"></i></th>
+          <th min></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for training, training_translation in list_training %}
+          <tr>
+            <td><a href="{% url 'trainings:detail' training_id=training.id %}">{{training.unique_id}}</a></td>
+            <td><a href="{% url 'trainings_translations:detail' training.id language.id %}">{{training_translation.title|default:"Undefined"}}</a></td>
+            <td>{{training.version}}</td>
+            <td><a class="icon ic-edit"  href="{% url 'trainings:update' pk=training.id %}"></a></td>
+            <td><a class="icon ic-edit"  href="{% url 'trainings_translations:update' training_translation.id language.id %}"></a></td>
+            <td>
+              {% if training.version == current_version %}
+                <a class="icon ic-delete"  href="{% url 'trainings:delete' pk=training.id %}"></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
   </div>
 
 {% endblock %}

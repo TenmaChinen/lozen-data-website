@@ -25,11 +25,9 @@
     <div class="header-group">
       <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:create' %}"><i class="icon ic-add"></i></a>
       
-      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:upload' %}">
-        JSON<i class="icon ic-upload"></i>
+      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:upload' %}">JSON<i class="icon ic-upload"></i>
       </a>
-      <a class="icon-link" href="{% url 'api:download_exercises_info_json_file' %}">
-        JSON<i class="icon ic-download"></i>
+      <a class="icon-link" href="{% url 'api:download_exercises_info_json_file' %}">JSON<i class="icon ic-download"></i>
       </a>
     </div>
   </header>
@@ -41,29 +39,25 @@
       <thead>
         <tr>
           <th med>ID</th>
-          <th style="min-width:200px">Title</th>
+          <th style="min-width:70px">Unique ID</th>
+          <th min></th>
           <th med>Ver</th>
+          <th style="min-width:70px">Translation</th>
           <th min></th>
-          <th min></th>
+          <th med>Ver</th>
         </tr>
       </thead>
 
       <tbody>
-        {% for exercise_info in list_exercise_info %}
+        {% for exercise_info, exercise_info_translation in list_exercise_info %}
           <tr>
             <td>{{exercise_info.id}}</td>
-            <td>{{exercise_info.title}}</td>
+            <td><a href="{% url 'exercises_info:detail' pk=exercise_info.id %}">{{exercise_info.unique_id}}</a></td>
+            <td><a class="icon ic-edit"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a></td>
             <td>{{exercise_info.version}}</td>
-            <td>
-              {% if exercise_info.version == current_version %}
-              <a class="icon ic-edit"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
-              {% endif %}
-            </td>
-            <td>
-              {% if exercise_info.version == current_version %}
-                <a class="icon ic-delete"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a>
-              {% endif %}
-            </td>
+            <td><a href="{% url 'exercises_info_translations:detail' exercise_info.id language.id %}">{{exercise_info_translation.title}}</a></td>
+            <td><a class="icon ic-edit"  href="{% url 'exercises_info_translations:update' exercise_info.id language.id %}"></a></td>
+            <td>{{exercise_info_translation.version}}</td>
           </tr>
         {% endfor %}
 

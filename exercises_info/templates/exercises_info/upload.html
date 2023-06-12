@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block btn_back %}
-  <a class="icon ic-back" href="{% url 'exercises_info:list' %}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
 {% block title %}Upload Exercise Info{% endblock %}
@@ -43,13 +43,7 @@
 
     </div>
 
-    <div class="form-footer">
-      <div></div>
-      <div class="footer-group">
-        <a type="button" class="btn-form" href="{% url 'exercises_info:list' %}">Cancel</a>
-        <button type="submit" form="form" class="btn-form">Save</button>
-      </div>
-    </div>
+    {% include "form-footer-upload.html" with url=url_back %}
 
   </div>
 

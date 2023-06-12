@@ -55,10 +55,9 @@ class ProgramDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         training_id = self.object.training_id
         
-        language_id = 1
+        language_id = self.request.session.get('language_id',1)
         context.update(dict(
             url_back = reverse_lazy('programs:list', kwargs=dict(training_id=training_id, language_id=language_id)),
-
         ))
         return context
 
@@ -69,7 +68,7 @@ class ProgramDetailView(DetailView):
 
 def program_list_view(request, training_id, language_id):
 
-    url_back = reverse_lazy('trainings:list')
+    url_back = reverse_lazy('trainings:list', kwargs=dict(language_id=language_id))
 
     if not Language.objects.exists():
         # TODO : Document the messages error
@@ -130,7 +129,6 @@ class ProgramUpdateView(UpdateView):
         return context
     
     def form_valid(self, form):
-        # form.instance.training_id = self.object.training_id
         form.instance.version = Tracking.get_last_version()
         return super().form_valid(form)
     

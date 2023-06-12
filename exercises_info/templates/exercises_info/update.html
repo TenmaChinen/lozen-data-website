@@ -33,15 +33,7 @@
 
     </div>
 
-    <div class="form-footer">
-      
-      <a type="button" class="btn-form" href="{% url 'exercises_info:delete' pk=exercise_info.id %}">Delete</a>
-
-      <div class="footer-group">
-        <a type="button" class="btn-form" href="{% url 'exercises_info:list' %}">Cancel</a>
-        <button type="submit" form="form" class="btn-form">Save</button>
-      </div>
-    </div>
+    {% include "form-footer-update.html" with url_cancel=url_back url_delete=url_delete %}
 
   </div>
 

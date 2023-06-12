@@ -1,3 +1,11 @@
+/* OVERRIDE */
+
+.ic-edit,
+.ic-delete{
+  width: 14px;
+  height: 14px;
+}
+
 /* HEADER */
 
 header {
@@ -89,9 +97,4 @@ th[min]{
 
 th[med]{
   max-width: 60px;
-}
-
-.ic-edit{
-  width: 18px;
-  height: 18px;
 }

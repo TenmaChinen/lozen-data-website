@@ -26,7 +26,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Unique ID :</label>
-            {{unique_id}}
+            {{program.unique_id}}
           </div>
 
           <div class="form-group">
@@ -50,3 +50,27 @@
   </div>
 
 {% endblock %}
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}program_id={{program.id}}&language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('id_language');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+{% endblock scripts %}

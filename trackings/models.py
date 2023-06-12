@@ -11,7 +11,9 @@ class Tracking(models.Model):
   @classmethod
   def get_last_version_released(cls):
     if cls.objects.exists():
-      return cls.objects.filter(state=True).latest('version').version
+      queryset = cls.objects.filter(state=True)
+      if queryset.exists():
+        return queryset.latest('version').version
     return None
 
   @classmethod

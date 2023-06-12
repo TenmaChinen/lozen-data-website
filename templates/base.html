@@ -26,8 +26,8 @@
 			
 			<div class="nav-group">
 				{% with request.path as url %}
-					<a href="{% url 'trainings:list' %}" class="nav-link {% if 'trainings' in url %}active{% endif %}"><div>Programs</div></a>
-					<a href="{% url 'exercises_info:list' %}" class="nav-link {% if 'exercises_info' in url %}active{% endif %}"><div>Exercises Info</div></a>	
+					<a href="{% url 'trainings:list' language_id=1 %}" class="nav-link {% if 'trainings' in url %}active{% endif %}"><div>Programs</div></a>
+					<a href="{% url 'exercises_info:list' language_id=1 %}" class="nav-link {% if 'exercises_info' in url %}active{% endif %}"><div>Exercises Info</div></a>	
 					<a href="{% url 'trackings:list' %}" class="nav-link {% if 'trackings' in url %}active{% endif %}"><div>Trackings</div></a>	
 					<a href="{% url 'languages:list' %}" class="nav-link {% if 'languages' in url %}active{% endif %}"><i class="icon ic-language"></i></a>	
 				{% endwith %}

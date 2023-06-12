@@ -13,6 +13,7 @@
     main{
       padding:0px;
     }
+    
     th .ic-language{
       filter: invert(0.7) !important;
     }
@@ -50,10 +51,11 @@
       <thead>
         <tr>
           <th style="min-width:200px">Unique ID</th>
+          <th min></th>
+          <th med>V</th>
           <th med>Translation</th>
-          <th med>Ver</th>
-          <th min>E</th>
-          <th min><i class="icon ic-language"></i></th>
+          <th min></th>
+          <th med>V</th>
           <th min></th>
         </tr>
       </thead>
@@ -62,10 +64,11 @@
         {% for program, program_translation in list_program %}
           <tr>
             <td><a href="{% url 'programs:detail' pk=program.id %}">{{program.unique_id}}</a></td>
-            <td><a href="{% url 'programs_translations:detail' program.id language.id %}">{{program_translation.title|default:"Undefined"}}</a></td>
-            <td>{{program.version}}</td>
             <td><a class="icon ic-edit"  href="{% url 'programs:update' pk=program.id %}"></a></td>
+            <td>{{program.version}}</td>
+            <td><a href="{% url 'programs_translations:detail' program.id language.id %}">{{program_translation.title|default:"Undefined"}}</a></td>
             <td><a class="icon ic-edit"  href="{% url 'programs_translations:update' program_translation.id language.id %}"></a></td>
+            <td>{{program.version}}</td>
             <td>
               {% if program.version == current_version %}
                 <a class="icon ic-delete"  href="{% url 'programs:delete' pk=program.id %}"></a>

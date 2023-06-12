@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block btn_back %}
-  <a class="icon ic-back" href="{% url 'exercises_info:list' %}"></a>
+  <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
 {% block title %}Detail Exercise Info{% endblock %}
@@ -29,13 +29,13 @@
     </div>
   </header>
 
-  <div class="detail-title">{{exercise_info.title}}</div>
+  <div class="detail-title">{{exercise_info.unique_id}}</div>
 
   <dl>
 
-    <div class="dl-group">
-      <dt>Description :</dt>
-      <dd>{{exercise_info.description|linebreaksbr}}</dd>
+    <div class="dl-group flat">
+      <dt>Version :</dt>
+      <dd>{{exercise_info.version}}</dd>
     </div>
 
   </dl>

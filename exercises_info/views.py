@@ -6,11 +6,16 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
+from pandas import DataFrame
 import json
 
+from exercises_info_translations.models import ExerciseInfoTranslation
 from exercises_info.forms import FormExerciseInfo
 from exercises_info.models import ExerciseInfo
 from trackings.models import Tracking
+from languages.models import Language
+from languages.forms import LanguageForm
+from programs.models import Program
 
 ###############################
 #######   C R E A T E   #######
@@ -41,20 +46,40 @@ class ExerciseInfoCreateView(CreateView):
 #########   L I S T   #########
 ###############################
 
-class ExerciseInfoListView(ListView):
-    model = ExerciseInfo
-    template_name = 'exercises_info/list.html'
-    context_object_name = 'list_exercise_info'
+def exercise_info_list_view(request, language_id):
 
+    if not Language.objects.exists():
+        messages.error(request, 'You need to add at least one Language')
+        return redirect(reverse_lazy('languages:list'))
+
+    last_version = Tracking.get_last_version()
+    exercises_info = ExerciseInfo.objects.all().order_by('id')
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(dict(
-            add_button_disabled = Tracking.is_last_version_released(),
-            current_version = Tracking.get_last_version()
-        ))
-        return context
+    l_exercise_info_translation = []
     
+    for exercise_info in exercises_info:
+        query = ExerciseInfoTranslation.objects.filter(exercise_info_id=exercise_info.id, language_id=language_id)
+        if query.exists():
+            program_translation = query.first()
+        else:
+            program_translation = ExerciseInfoTranslation(exercise_info_id=exercise_info.id, language_id=language_id, version=last_version)
+            program_translation.save()
+
+        l_exercise_info_translation.append(program_translation)
+
+    l_exercise_info_translation.sort( key = lambda record : record.exercise_info_id )
+
+    l_exercise_info = zip(exercises_info, l_exercise_info_translation)
+
+    context = dict(
+        language=Language.objects.get(id=language_id),
+        list_exercise_info=l_exercise_info,
+        language_widget=LanguageForm.get_language_widget(language_id),
+        add_button_disabled = Tracking.is_last_version_released(),
+        current_version = Tracking.get_last_version()
+    )
+
+    return render(request, 'exercises_info/list.html', context)
 
 ###############################
 #######   D E T A I L   #######
@@ -65,6 +90,15 @@ class ExerciseInfoDetailView(DetailView):
     template_name = 'exercises_info/detail.html'
     context_object_name = 'exercise_info'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        language_id = self.request.session.get('language_id',1)
+        context.update(dict(
+            url_back = reverse_lazy('exercises_info:list', kwargs=dict(language_id=language_id)),
+
+        ))
+        return context
+
 ###############################
 #######   U P D A T E   #######
 ###############################
@@ -74,16 +108,27 @@ class ExerciseInfoUpdateView(UpdateView):
     form_class = FormExerciseInfo
     template_name = 'exercises_info/update.html'
     context_object_name = 'exercise_info'
-    success_url = reverse_lazy('exercises_info:list')
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          return redirect(self.success_url)
+          return redirect(self.get_success_url())
       return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # TODO : Set the last version here
+        form.instance.version = Tracking.get_last_version()
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(dict(
+            url_back=self.get_success_url(),
+            url_delete=reverse_lazy('exercises_info:delete', kwargs=dict(pk=self.object.id))
+        ))
+        return context
+
+    def get_success_url(self):
+        language_id = self.request.session.get('language_id',1)
+        return reverse_lazy('exercises_info:list', kwargs=dict(language_id=language_id))
 
 ###############################
 #######   D E L E T E   #######
@@ -109,7 +154,7 @@ class ExerciseInfoDeleteView(DeleteView):
 
 def exercise_info_upload_view(request):
 
-    url_back = reverse_lazy('exercises_info:list')
+    url_back = reverse_lazy('exercises_info:list', kwargs=dict(language_id=1))
     last_tracking_version = Tracking.get_last_version()
     if last_tracking_version == -1:
         messages.error(request,'Add one open tracking before uploading "Exercise Info"')
@@ -119,9 +164,9 @@ def exercise_info_upload_view(request):
     ####   G E T   ####
     ###################
     if request.method == 'GET':
-        d_raw_json = get_d_raw_json()
-        raw_json = json.dumps(d_raw_json, indent=2)
-        context = {'raw_json': raw_json}
+        d_raw_json = get_exercises_info_dict()
+        raw_json = json.dumps(d_raw_json, indent=2, ensure_ascii=False)
+        context = {'raw_json': raw_json, 'url_back' : url_back }
         return render(request, 'exercises_info/upload.html', context)
     
     ###################
@@ -129,42 +174,30 @@ def exercise_info_upload_view(request):
     ###################
     else:
         d_data = request.POST
+        d_language = dict(Language.objects.all().values_list('abbreviation','id'))
 
         try:
             raw_json = d_data['raw_json']
             d_raw_json = json.loads(raw_json)
-
-            s_uploaded_ids = { int(_id) for _id in d_raw_json }
-            s_saved_ids = { int(_id) for _id in ExerciseInfo.objects.all().values_list('id', flat=True) }
-
-            s_reused_ids = s_uploaded_ids.intersection(s_saved_ids)
-            s_new_ids = s_uploaded_ids.difference(s_saved_ids)
-            print('Saved IDs : ',s_saved_ids)
-            print('Reused : ',s_reused_ids)
-            print('New Ids : ', s_new_ids)
-
-            # Update Reused IDs
-            for reused_id in s_reused_ids:
-                exercise_info = ExerciseInfo.objects.get(id=reused_id)
+        
+            for _id, d_exercise_info in d_raw_json.items():
+                _id = int(_id)
                 
-                for key, value in d_raw_json[str(reused_id)].items():
-                    if key == 'id': continue
-                    setattr(exercise_info, key, value)
-                exercise_info.version = last_tracking_version
+                # TODO : Document "get_or_create" ( if create=True doesn't need save )
+                exercise_info, is_created = ExerciseInfo.objects.get_or_create(id=_id, defaults=dict(version=last_tracking_version))
+                exercise_info.unique_id = d_exercise_info['unique_id']
                 exercise_info.save()
+    
+                # file_name = d_exercise_info['file_name']
 
-            # Create New IDs
-            for new_id in s_new_ids:
-                d_exercise_info_data = d_raw_json[str(new_id)]
-                form_exercise_info = FormExerciseInfo(data=d_exercise_info_data)
-                form_exercise_info.data['id'] = new_id
-                form_exercise_info.instance.id = new_id
-                form_exercise_info.instance.version = last_tracking_version
-                if form_exercise_info.is_valid():
-                    form_exercise_info.save()
-                else:
-                    # TODO : Append as another table the non uploaded rows in red.
-                    print('Form error : ' + form_exercise_info.errors)
+                for language_abbreviation, d_translation in d_exercise_info['translations'].items():
+                    language_id = d_language[language_abbreviation]
+                    d_defaults = dict(version=last_tracking_version)
+                    exercise_info_translation, is_created = ExerciseInfoTranslation.objects.get_or_create(exercise_info_id=_id, language_id=language_id, defaults=d_defaults)
+                    exercise_info_translation.title = d_translation['title']
+                    exercise_info_translation.description = d_translation['description']
+                    exercise_info_translation.version = last_tracking_version
+                    exercise_info_translation.save()
 
             return redirect(url_back)
         
@@ -173,27 +206,30 @@ def exercise_info_upload_view(request):
             return render(request, 'exercises_info/upload.html', context)
 
 ###############################
-#####   D O W N L O A D   #####
-###############################
-
-def exercise_info_download(request):
-    if request.method == 'GET':
-        response = HttpResponse(content_type='application/json')
-        response['Content-Disposition'] = 'attachment; filename="exercises_info.json'
-
-        d_raw_json = get_d_raw_json()
-        json.dump(d_raw_json, response, indent=2)
-        return response
-
-###############################
 ########   U T I L S   ########
 ###############################
 
-def get_d_raw_json():
-    d_raw_json = {}
-    for exercise_info in ExerciseInfo.objects.all():
-        d_raw_json[exercise_info.id] = dict(
-            title=exercise_info.title,
-            description=exercise_info.description
-        )
-    return d_raw_json
+def get_exercises_info_dict():
+    
+    queryset = ExerciseInfo.objects.all()
+    if queryset.exists():
+        values = queryset.values('id','unique_id')
+        d_parent = DataFrame(data=values)
+        d_parent.set_index('id', inplace=True)
+        d_raw = d_parent.to_dict(orient='index')
+        for k in d_raw:
+            d_raw[k]['translations'] = {}
+    
+        l_field_name = [ field.get_attname() for field in ExerciseInfoTranslation._meta.get_fields() ]
+        l_field_name = [ f for f in l_field_name  if f not in ['id','version','language_id'] ]
+        values = ExerciseInfoTranslation.objects.all().values(*l_field_name, 'language__abbreviation')
+        d_exercise_info_translations = DataFrame(data=values)
+        
+        for exercise_info_id, df_group in d_exercise_info_translations.groupby('exercise_info_id'):
+            df_group.drop('exercise_info_id', axis=1, inplace=True)
+            for language_id, d_record in df_group.groupby('language__abbreviation'):
+                d_record.drop('language__abbreviation', axis=1, inplace=True)
+                d_raw[exercise_info_id]['translations'][language_id] = d_record.squeeze().to_dict()
+
+        return d_raw
+    return {}

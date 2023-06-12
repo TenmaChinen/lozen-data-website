@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'trainings',
+    'trainings_translations',
     'programs',
     'programs_translations',
-    'exercises',
     'exercises_info',
+    'exercises_info_translations',
+    'exercises',
     'languages',
     'api',
     'trackings'
