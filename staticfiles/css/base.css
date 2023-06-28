@@ -103,11 +103,15 @@ nav{
 .header-select,
 .header-select option {
   color: white;
-  padding: 6px 8px 6px 8px;
-  font-size: 13px;
-  font-weight: bold;
-  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 500;
   background-color: var(--black-mate);
+}
+
+.header-select{
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px 0px 5px 5px;
 }
 
 /* UTILS */
@@ -135,15 +139,23 @@ nav{
 .messages-container{
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding-left: 20px;
   padding-right: 20px;
 }
 
 .message-alert{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background-color: rgb(175, 63, 63);
   color: white;
   padding: 10px;
   font-size: 14px;
   font-weight: bold;
   border-radius: 5px;
+  margin-top: 10px;
+  max-width: 600px;
+  width: 100%;
+  text-decoration: none;
 }

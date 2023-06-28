@@ -8,6 +8,8 @@ from languages.forms import LanguageForm
 
 from trackings.models import Tracking
 
+import utils
+
 ###############################
 #######   D E T A I L   #######
 ###############################
@@ -37,21 +39,25 @@ def exercise_info_translation_detail_view(request, exercise_info_id, language_id
 #######   U P D A T E   #######
 ###############################
 
-def exercise_info_translation_update_view(request, exercise_info_id, language_id):
+def exercise_info_translation_update_view(request, exercise_info_id, language_id=0):
     
-    url_success = reverse_lazy('exercises_info:list', kwargs=dict(language_id=language_id))
+    url_success = reverse_lazy('exercises_info:list')
     
     last_version = Tracking.get_last_version()
     if last_version == -1:
-          return redirect(url_success)
+          utils.add_open_track_message(request)
     
+    language_id = utils.handle_language(request, language_id)
+
     query = ExerciseInfoTranslation.objects.filter(exercise_info_id=exercise_info_id, language_id=language_id)
     if query.exists():
         exercise_info_translation = query.first()
-    else:
+    elif last_version != -1:
         exercise_info_translation = ExerciseInfoTranslation(exercise_info_id=exercise_info_id, language_id=language_id)
         exercise_info_translation.version = last_version
         exercise_info_translation.save()
+    else:
+        exercise_info_translation = None
 
     ###################
     ###   P O S T   ###
@@ -69,12 +75,18 @@ def exercise_info_translation_update_view(request, exercise_info_id, language_id
         ###################
         ####   G E T   ####
         ###################
-        form_exercise_info_translation = FormExerciseInfoTranslation(instance=exercise_info_translation)
+        if exercise_info_translation is None:
+            form_exercise_info_translation = None    
+        else:
+            form_exercise_info_translation = FormExerciseInfoTranslation(instance=exercise_info_translation)
+            if last_version == -1:
+                form_exercise_info_translation.disable()
 
     #########################
     ####   C O M M O N   ####
     #########################
     context = dict(
+        disabled=last_version==-1,
         exercise_info=ExerciseInfo.objects.get(id=exercise_info_id),
         form_exercise_info_translation=form_exercise_info_translation,
         url_back = url_success,

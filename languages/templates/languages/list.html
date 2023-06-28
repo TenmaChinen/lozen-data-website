@@ -4,7 +4,7 @@
 {% block title %}Languages{% endblock %}
 
 {% block links %}
-  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
   <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 {% endblock %}
 
@@ -16,23 +16,36 @@
 {% endblock styles %}
   
 {% block content %}
-
   <header>
     <div class="header-title">Languages</div>
     <a id="ic-add" class="btn-link" href="{% url 'languages:create' %}">Add Language</a>
   </header>
 
-  {% include 'messages_error.html' %}
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th min>ID</th>
+          <th lg>Language</th>
+          <th med>Abbreviation</th>
+          <th min></th>
+        </tr>
+      </thead>
 
-  <div class="list-container">
-    
-    {% for language in list_language %}
-      <div class="list-item">
-        <div class="btn-item-title">{{language}}</div>
-        <a class="icon ic-edit" href="{% url 'languages:update' pk=language.id %}"></a>
-      </div>
-    {% endfor %}
-      
+      <tbody>
+        {% for language in list_language %}
+          <tr>
+            <td>{{language.id}}</td>
+            <td>{{language.get_id_display}}</td>
+            <td>{{language.abbreviation}}</td>
+            <td>
+              <a class="icon ic-edit" href="{% url 'languages:update' pk=language.id %}"></a>
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
   </div>
 
 {% endblock %}

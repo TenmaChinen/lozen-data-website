@@ -7,3 +7,5 @@ class FormExerciseInfo(forms.ModelForm):
     model = ExerciseInfo
     exclude = ['version',]
     
+  def disable(self):
+    self.fields['unique_id'].widget.attrs['disabled'] = True

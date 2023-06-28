@@ -28,6 +28,7 @@
 
           {% for field in form %}
             <div class="form-group">
+              {{field.errors}}
               {{field.label_tag}}
               {{field}}
             </div>
@@ -36,13 +37,7 @@
 
     </div>
 
-    <div class="form-footer">
-      <div></div>
-      <div class="footer-group">
-        <a type="button" class="btn-form" href="{% url 'exercises_info:list' %}">Cancel</a>
-        <button type="submit" form="form" class="btn-form">Create</button>
-      </div>
-    </div>
+    {% include "form-footer-create.html" with url=url_cancel %}
 
   </div>
 

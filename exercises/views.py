@@ -12,6 +12,7 @@ from exercises.models import Exercise
 from trackings.models import Tracking
 from programs.models import Program
 
+import utils
 
 ###############################
 #######   C R E A T E   #######
@@ -23,7 +24,8 @@ class ExerciseCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          return redirect(self.success_url)
+          utils.add_open_track_message(request)
+          return redirect(self.get_success_url())
       return super().dispatch(request, *args, **kwargs)
 
     # TODO : Document the "get_initial" override to initialize forms
@@ -60,8 +62,8 @@ class ExerciseCreateView(CreateView):
         # TODO : Document that we can get the data defined in form is available here as "self.object"
         d_kwargs = {
             'program_id': self.kwargs['program_id'],
-            'week': self.object.week,
-            'day': self.object.day
+            'week': self.kwargs['week'],
+            'day': self.kwargs['day']
         }
         return reverse_lazy('exercises:list', kwargs=d_kwargs)
 
@@ -96,15 +98,15 @@ class ExerciseListView(ListView):
         week_widget.value = self.kwargs['week']
         day_widget.value = self.kwargs['day']
 
-        program_id = self.kwargs['program_id']
-        url_back = reverse_lazy('programs_translations:detail', kwargs=dict(language_id=1, program_id=program_id))
-        program_unique_id = Program.objects.get(id=program_id).unique_id
+        program = Program.objects.get(id=self.kwargs['program_id'])
+
         context.update(dict(
             current_version = Tracking.get_last_version(),
-            program_unique_id=program_unique_id,
+            program_unique_id=program.unique_id,
             week_widget=week_widget,
             day_widget=day_widget,
-            url_back=url_back))
+            url_back=reverse_lazy('programs:list', kwargs=dict(training_id=program.training_id))
+        ))
 
         return context
 
@@ -118,12 +120,9 @@ class ExerciseUpdateView(UpdateView):
     template_name = 'exercises/update.html'
 
     def dispatch(self, request, *args, **kwargs):
-      if Tracking.is_last_version_released():
-            exercise = Exercise.objects.get(pk=self.kwargs['pk'])
-            d_kwargs = dict(program_id=exercise.program.id, week=exercise.week, day=exercise.day)
-            url_back = reverse_lazy('exercises:list', kwargs=d_kwargs)
-            return redirect(url_back)
-      return super().dispatch(request, *args, **kwargs)
+        if Tracking.is_last_version_released():
+            utils.add_open_track_message(request)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         week, day = self.object.week, self.object.day
@@ -139,13 +138,15 @@ class ExerciseUpdateView(UpdateView):
     #   return initial
 
     # TODO : Document how to set values in form ( using get_form )
+    
     def get_form(self):
         form = super().get_form(ExerciseForm)
         rest_total_seconds = form.instance.rest
         # rest_total_seconds = self.object.rest # This works as well
         form.fields['rest_minutes'].initial = rest_total_seconds // 60
         form.fields['rest_seconds'].initial = rest_total_seconds % 60
-
+        if Tracking.is_last_version_released():
+            form.disable()
         return form
 
     # TODO : Document how to reasign exlucded form fields.
@@ -158,6 +159,7 @@ class ExerciseUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         program_id, week, day = self.object.program_id, self.object.week, self.object.day
         context.update(
+            disabled=Tracking.is_last_version_released(),
             url_back=reverse_lazy('exercises:list', kwargs=dict(program_id=program_id, week=week, day=day)),
             url_delete=reverse_lazy('exercises:delete', kwargs=dict(pk=self.object.id))
         )
@@ -173,13 +175,17 @@ class ExerciseDeleteView(DeleteView):
     template_name = 'exercises/delete.html'
 
     def get_success_url(self):
-        d_kwargs = dict(
-            program_id=self.object.program_id,
-            week=self.object.week,
-            day=self.object.day,
-        )
-
-        return reverse_lazy('exercises:list', kwargs=d_kwargs)
+        program_id, week, day = self.object.program_id, self.object.week, self.object.day
+        return reverse_lazy('exercises:list', kwargs=dict(program_id=program_id, week=week, day=day ))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(dict(
+            disabled=Tracking.is_last_version_released(),
+            url_back=self.get_success_url()
+        ))
+        return context
+    
 
 ###############################
 #######   U P L O A D   #######

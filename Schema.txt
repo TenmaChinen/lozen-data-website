@@ -1,12 +1,34 @@
-# BUGS :
-
-🔴 When adding exercises - Show error if "exercise_info_id" doesn't exists 🔴
-🔴 ADD LANGUAGES TO TRACKING !! Android App needs Languages Table!!! 🔴
-
-Think how to manage deleted Rows
 🟡🟢🔴
 
- [ Django every database change action ]
+# TODO : Add some Increase version for All ( Parent or Translations ) button
+# In case we add a new field
+
+[ W E B S I T E ]
+
+    · [ L I S T S ]
+
+        - If Language No Exist:
+            · Redirect to Language
+        - If No Open Track :
+            · Add 'Track Warning' Message
+        
+        - Disable edit for Program Exercises ( U sure ?)
+        - Disable edit button if Translation record does not exist
+    
+    · [ U P D A T E S ]
+        - If No Track :
+            · Disable Form, Save, Delete
+            · Add 'Track Warning' Message
+        - If record does not exist:
+            · Redirect to LIST
+            · Add 'Record No Exist' Message
+        - 
+
+Think how to manage deleted Rows
+
+
+ [ D J A N G O   D A T A B A S E   A C T I O N ]
+ 
     1. 🟢 "Tracking" table has [ "version", "state", "release_date" ]
     2. 🟡 Next tables must contain a field called "version":
         · 🟢 "Exercise Info"          · 🔴 "Exercises Info Translation

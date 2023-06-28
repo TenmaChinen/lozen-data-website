@@ -7,15 +7,9 @@
   <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block styles %}
-<style>
-  main {
-    padding: 20px;
-  }
-</style>
-{% endblock %}
-
 {% block content %}
+
+{% include 'messages_error.html' %}
 
 <div class="form-container">
 

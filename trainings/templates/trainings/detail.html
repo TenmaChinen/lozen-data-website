@@ -14,10 +14,10 @@
 {% block content %}
 
   <header>
-    <div class="header-title">{{training.unique_id}} Details</div>
+    <div class="header-title">Training Details</div>
     <div class="row">
-      <a class="btn-link" href="{% url 'trainings:update' training.id%}">Edit</a>
-      <a class="btn-link" href="{% url 'programs:list' training.id language_id %}">Programs</a>
+      <a class="icon-link" href="{% url 'trainings:update' training.id%}"><i class="icon ic-edit-white"></i></a>
+      <a class="btn-link" href="{% url 'programs:list' training.id %}">Programs</a>
     </div>
   </header>
 

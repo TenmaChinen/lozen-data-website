@@ -65,8 +65,8 @@ form{
   text-decoration: underline;
 }
 
-.ic-delete{
-  color: rgb(193, 100, 100);
+.btn-delete{
+  color: rgb(211, 96, 96);
   align-self: flex-start;
 }
 
@@ -95,9 +95,27 @@ form textarea{
   height: 100px;
 }
 
+form input:disabled{
+  border: 1px solid rgb(212, 212, 212);
+  padding: 3px;
+  background: none;
+}
+
+form input:disabled,
+form textarea:disabled,
+form select:disabled{
+  color: rgb(184, 184, 184);
+}
+
 .form-group{
   display: flex;
   flex-direction: column;
+  gap: 5px;
+}
+
+.form-group-flat{
+  display: flex;
+  flex-direction: row;
   gap: 5px;
 }
 

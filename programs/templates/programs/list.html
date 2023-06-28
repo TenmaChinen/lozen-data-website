@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Training Programs{% endblock %}
+{% block title %}Programs{% endblock %}
 
 {% block links %}
   <link rel="stylesheet" href="{% static 'css/table.css' %}">
@@ -25,14 +25,13 @@
   <a class="icon ic-back" href="{{url_back}}"></a>
 {% endblock %}
 
-
 {% block content %}
 
   <header>
     
     <div class="header-group wrap">
       <p class="header-title">Programs</p>
-      <p class="header-subtitle">{{training.title}} </p>
+      <p class="header-subtitle">( {{training.unique_id}} )</p>
     </div>
 
     <div class="header-group">
@@ -50,24 +49,26 @@
     <table>
       <thead>
         <tr>
-          <th style="min-width:200px">Unique ID</th>
           <th min></th>
-          <th med>V</th>
-          <th med>Translation</th>
+          <th lg>Unique ID</th>
           <th min></th>
-          <th med>V</th>
+          <th min>V</th>
+          <th lg>Translation</th>
           <th min></th>
+          <th min>V</th>
+          <th med></th>
         </tr>
       </thead>
 
       <tbody>
         {% for program, program_translation in list_program %}
           <tr>
+            <td><a class="icon ic-list" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}"></a></td>
             <td><a href="{% url 'programs:detail' pk=program.id %}">{{program.unique_id}}</a></td>
             <td><a class="icon ic-edit"  href="{% url 'programs:update' pk=program.id %}"></a></td>
             <td>{{program.version}}</td>
-            <td><a href="{% url 'programs_translations:detail' program.id language.id %}">{{program_translation.title|default:"Undefined"}}</a></td>
-            <td><a class="icon ic-edit"  href="{% url 'programs_translations:update' program_translation.id language.id %}"></a></td>
+            <td><a href="{% url 'programs_translations:detail' program.id %}">{{program_translation.title|default:"Undefined"}}</a></td>
+            <td><a class="icon ic-edit"  href="{% url 'programs_translations:update' program_translation.id %}"></a></td>
             <td>{{program.version}}</td>
             <td>
               {% if program.version == current_version %}

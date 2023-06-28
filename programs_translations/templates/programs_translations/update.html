@@ -13,6 +13,8 @@
 
 {% block content %}
 
+  {% include 'messages_error.html' %}
+
   <div class="form-container">
 
     <div class="form-header">
@@ -24,6 +26,7 @@
         {% csrf_token %}
         
         <div class="form-grid">
+          
           <div class="form-group">
             <label>Unique ID :</label>
             {{program.unique_id}}
@@ -33,6 +36,7 @@
             {{form_program_translation.language.label_tag}}
             {{form_program_translation.language}}
           </div>
+
         </div>
 
         {% for field in form_program_translation.visible_fields|slice:"1:" %}

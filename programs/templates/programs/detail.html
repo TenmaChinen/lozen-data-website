@@ -14,9 +14,9 @@
 {% block content %}
 
   <header>
-    <div class="header-title">{{program.training.title}} Details</div>
+    <div class="header-title">Program Details</div>
     <div class="row">
-      <a class="btn-link" href="{% url 'programs:update' program.id%}">Edit</a>
+      <a class="icon-link" href="{% url 'programs:update' program.id%}"><i class="icon ic-edit-white"></i></a>
       <a class="btn-link" href="{% url 'exercises:list' program_id=program.id week=1 day=1 %}">Exercises</a>
     </div>
   </header>

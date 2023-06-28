@@ -12,7 +12,7 @@ class Exercise(models.Model):
   day = models.PositiveSmallIntegerField(choices=L_DAYS, blank=False,null=False, default=1)
   idx = models.PositiveSmallIntegerField(blank=False, null=False)
   sets = models.PositiveSmallIntegerField(blank=False, null=False)
-  reps = models.PositiveSmallIntegerField(blank=True, null=True)
+  unit_value = models.PositiveSmallIntegerField(blank=True, null=True)
   percent = models.PositiveSmallIntegerField(blank=True, null=True)
   power = models.PositiveSmallIntegerField(blank=True, null=True)
   rir = models.PositiveSmallIntegerField(blank=True, null=True)

@@ -11,9 +11,9 @@
 {% block styles %}
   <style>
     .ic-download,
-    .ic-upload{
-      width: 16px;
-      height: 16px;
+    .ic-upload {
+      width: 14px !important;
+      height: 14px !important;
     }
   </style>
 {% endblock %}
@@ -21,14 +21,12 @@
 {% block content %}
 
   <header>
-    <div class="header-title">Exercise Info List</div>
+    <div class="header-title">Exercise Info</div>
     <div class="header-group">
-      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:create' %}"><i class="icon ic-add"></i></a>
-      
-      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:upload' %}">JSON<i class="icon ic-upload"></i>
-      </a>
-      <a class="icon-link" href="{% url 'api:download_exercises_info_json_file' %}">JSON<i class="icon ic-download"></i>
-      </a>
+      <a class="icon-link" href="{% url 'exercises_info:create' %}"><i class="icon ic-add"></i></a>
+      <a class="icon-link {% if add_button_disabled %}disabled{% endif %}" href="{% url 'exercises_info:upload' %}"><i class="icon ic-upload"></i></a>
+      <a class="icon-link" href="{% url 'api:download_exercises_info_json_file' %}"><i class="icon ic-download"></i></a>
+      {% include 'select-widget.html' with id="language_selector" widget=language_widget %}
     </div>
   </header>
 
@@ -39,12 +37,13 @@
       <thead>
         <tr>
           <th med>ID</th>
-          <th style="min-width:70px">Unique ID</th>
+          <th min>M</th>
+          <th lg>Unique ID</th>
           <th min></th>
-          <th med>Ver</th>
-          <th style="min-width:70px">Translation</th>
+          <th med>V</th>
+          <th lg>Translation</th>
           <th min></th>
-          <th med>Ver</th>
+          <th med>V</th>
         </tr>
       </thead>
 
@@ -52,6 +51,7 @@
         {% for exercise_info, exercise_info_translation in list_exercise_info %}
           <tr>
             <td>{{exercise_info.id}}</td>
+            <td>{{exercise_info.get_unit_type_display|slice:"0:1"}}</td>
             <td><a href="{% url 'exercises_info:detail' pk=exercise_info.id %}">{{exercise_info.unique_id}}</a></td>
             <td><a class="icon ic-edit"  href="{% url 'exercises_info:update' pk=exercise_info.id %}"></a></td>
             <td>{{exercise_info.version}}</td>
@@ -66,3 +66,29 @@
   </div>
 
 {% endblock %}
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('language_selector');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+
+{% endblock scripts %}
+  

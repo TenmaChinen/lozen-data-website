@@ -4,24 +4,35 @@ from django.urls import reverse_lazy
 from trainings_translations.forms import FormTrainingTranslation
 from trainings_translations.models import TrainingTranslation
 from languages.forms import LanguageForm
-from trainings.models import Training
 
+from trainings.models import Training
 from trackings.models import Tracking
+
+import utils
 
 ###############################
 #######   D E T A I L   #######
 ###############################
 
-def training_translation_detail_view(request, training_id, language_id):
+def training_translation_detail_view(request, training_id, language_id=0):
+
+    last_version = Tracking.get_last_version()
+
+    language_id = utils.handle_language(request, language_id)
 
     training = Training.objects.get(id=training_id)
     queryset = TrainingTranslation.objects.filter(training_id=training_id, language_id=language_id)
+    
     if queryset.exists():
         training_translation = queryset.first()
-    else:
+    
+    elif last_version != -1:
         training_translation = TrainingTranslation(training_id=training_id, language_id=language_id)
-        training_translation.version = Tracking.get_last_version()
+        training_translation.version = last_version
         training_translation.save()
+
+    else:
+        training_translation=None
 
     context = dict(
         training = training,
@@ -37,22 +48,28 @@ def training_translation_detail_view(request, training_id, language_id):
 #######   U P D A T E   #######
 ###############################
 
-def training_translation_update_view(request, training_id, language_id):
-    
-    training = Training.objects.get(id=training_id)
-    url_success = reverse_lazy('trainings:list', kwargs=dict(language_id=language_id))
+def training_translation_update_view(request, training_id, language_id=0):
     
     last_version = Tracking.get_last_version()
     if last_version == -1:
-          return redirect(url_success)
+        utils.add_open_track_message(request)
+        disabled=True
+    else:
+        disabled=False
+    
+    url_success = reverse_lazy('trainings:list')
+    language_id = utils.handle_language(request, language_id)
+    training = Training.objects.get(id=training_id)
     
     query = TrainingTranslation.objects.filter(training_id=training_id, language_id=language_id)
     if query.exists():
         training_translation = query.first()
-    else:
+    elif last_version != -1:
         training_translation = TrainingTranslation(training_id=training_id, language_id=language_id)
         training_translation.version = last_version
         training_translation.save()
+    else:
+        training_translation = None
 
     ###################
     ###   P O S T   ###
@@ -70,13 +87,19 @@ def training_translation_update_view(request, training_id, language_id):
         ###################
         ####   G E T   ####
         ###################
-        form_training_translation = FormTrainingTranslation(instance=training_translation)
+        if training_translation is None:
+            form_training_translation = None
+        else:
+            form_training_translation = FormTrainingTranslation(instance=training_translation)
+            if disabled:
+                form_training_translation.disable()
 
     #########################
     ####   C O M M O N   ####
     #########################
     context = dict(
-        unique_id=training.unique_id,
+        disabled=disabled,
+        training=training,
         form_training_translation=form_training_translation,
         url_back = url_success,
         url_delete = reverse_lazy('programs:delete', kwargs=dict(pk=training_id))

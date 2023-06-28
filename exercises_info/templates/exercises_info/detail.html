@@ -12,18 +12,10 @@
   <link rel="stylesheet" href="{% static 'css/detail.css' %}">
 {% endblock %}
 
-{% block styles %}
-  <style>
-    main {
-      padding: 20px;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
 
   <header>
-    <div class="header-title">Exercise Info Details</div>
+    <div class="header-title">Details</div>
     <div>
       <a class="btn-link" href="{% url 'exercises_info:update' pk=exercise_info.id %}">Edit</a>
     </div>
@@ -36,6 +28,11 @@
     <div class="dl-group flat">
       <dt>Version :</dt>
       <dd>{{exercise_info.version}}</dd>
+    </div>
+
+    <div class="dl-group flat">
+      <dt>Unit Type :</dt>
+      <dd>{{exercise_info.get_unit_type_display}}</dd>
     </div>
 
   </dl>

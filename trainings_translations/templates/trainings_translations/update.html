@@ -13,6 +13,8 @@
 
 {% block content %}
 
+  {% include 'messages_error.html' %}
+
   <div class="form-container">
 
     <div class="form-header">
@@ -26,7 +28,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Unique ID :</label>
-            {{unique_id}}
+            {{training.unique_id}}
           </div>
 
           <div class="form-group">
@@ -45,8 +47,33 @@
       </form>
     </div>
     
-    {% include "form-footer-update.html" with url_cancel=url_back url_delete=url_delete %}
+    {% include "form-footer-update.html" with url_cancel=url_back %}
  
   </div>
 
 {% endblock %}
+
+
+{% block scripts %}
+  <script>
+      
+    onLanguageChange = function( event ){
+      const argLanguage = languageSelector.value;
+
+      const oldUrl = window.location.href;
+      const symbol = '%3F'; // Question Mark Symbol
+      const baseUrl = oldUrl.split(symbol)[0];
+      const newUrl = `${baseUrl}${symbol}training_id={{training.id}}&language_id=${argLanguage}`;
+
+      console.log(oldUrl);
+      console.log(newUrl);
+      if( newUrl !== oldUrl){
+        window.location.href = newUrl;
+      }
+    }
+
+    const languageSelector = document.getElementById('id_language');
+    languageSelector.addEventListener( 'change', onLanguageChange);
+
+  </script>
+{% endblock scripts %}

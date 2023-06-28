@@ -3,7 +3,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.contrib import messages
 
 from languages.forms import LanguageForm
 from programs.forms import FormProgram
@@ -13,6 +12,8 @@ from trainings.models import Training
 from languages.models import Language
 from programs.models import Program
 from trackings.models import Tracking
+
+import utils
 
 ###############################
 #######   C R E A T E   #######
@@ -24,6 +25,7 @@ class ProgramCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
+          utils.add_open_track_message(request)
           return redirect(self.get_success_url())
       return super().dispatch(request, *args, **kwargs)
 
@@ -34,7 +36,7 @@ class ProgramCreateView(CreateView):
 
     def get_success_url(self):
         training_id = self.kwargs['training_id']
-        return reverse_lazy('programs:list', kwargs=dict(training_id=training_id, language_id=1))
+        return reverse_lazy('programs:list', kwargs=dict(training_id=training_id))
     
     def form_valid(self, form):
         training_id = self.kwargs['training_id']
@@ -55,9 +57,8 @@ class ProgramDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         training_id = self.object.training_id
         
-        language_id = self.request.session.get('language_id',1)
         context.update(dict(
-            url_back = reverse_lazy('programs:list', kwargs=dict(training_id=training_id, language_id=language_id)),
+            url_back = reverse_lazy('programs:list', kwargs=dict(training_id=training_id)),
         ))
         return context
 
@@ -66,38 +67,38 @@ class ProgramDetailView(DetailView):
 #########   L I S T   #########
 ###############################
 
-def program_list_view(request, training_id, language_id):
-
-    url_back = reverse_lazy('trainings:list', kwargs=dict(language_id=language_id))
+def program_list_view(request, training_id, language_id=0):
 
     if not Language.objects.exists():
-        # TODO : Document the messages error
-        message = 'You need to add at least one Language'
-        # messages.add_message(request, messages.ERROR, message)
-        messages.error(request, message)
-        return redirect(url_back)
+        utils.add_need_language_message(request)
+        return redirect(reverse_lazy('languages:list'))
 
+    language_id = utils.handle_language(request, language_id)
     last_version = Tracking.get_last_version()
+    
     l_program_translation = []
     programs = Program.objects.filter(training_id=training_id)
     for program in programs:
         query = ProgramTranslation.objects.filter(program_id=program.id, language_id=language_id)
         if query.exists():
             program_translation = query.first()
-        else:
+        elif last_version != -1:
             program_translation = ProgramTranslation(program_id=program.id, language_id=language_id, version=last_version)
             program_translation.save()
+        else:
+            program_translation = None
 
         l_program_translation.append(program_translation)
 
     l_program = zip(programs, l_program_translation)
 
     context = dict(
+        current_version=last_version,
         training=Training.objects.get(id=training_id),
         language=Language.objects.get(id=language_id),
         list_program=l_program,
         language_widget=LanguageForm.get_language_widget(language_id),
-        url_back=url_back
+        url_back=reverse_lazy('trainings:list')
     )
 
     return render(request, 'programs/list.html', context)
@@ -113,11 +114,12 @@ class ProgramUpdateView(UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          return redirect(self.get_success_url())
+        utils.add_open_track_message(request)
       return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('programs:list', kwargs=dict(training_id=self.object.training_id, language_id=1))
+        training_id = self.get_object().training_id
+        return reverse_lazy('programs:list', kwargs=dict(training_id=training_id))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -126,8 +128,17 @@ class ProgramUpdateView(UpdateView):
             url_back=self.get_success_url(),
             url_delete=reverse_lazy('programs:delete', kwargs=dict(pk=self.object.id))
         ))
+
+        context['disabled'] = Tracking.is_last_version_released()
+
         return context
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if Tracking.is_last_version_released():
+            form.disable()
+        return form
+
     def form_valid(self, form):
         form.instance.version = Tracking.get_last_version()
         return super().form_valid(form)
@@ -142,14 +153,19 @@ class ProgramDeleteView(DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         if Tracking.is_last_version_released():
-            return redirect(self.get_success_url())
+            utils.add_open_track_message(request)
         return super().dispatch(request, *args, **kwargs)
     
     def get_success_url(self):
-        d_kwargs = dict(training_id=self.object.training.id, language_id=1)
+        program = self.get_object()
+        d_kwargs = dict(training_id=program.training.id)
         return reverse_lazy('programs:list', kwargs=d_kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(dict(url_back=self.get_success_url()))
+        context.update(
+            dict(
+            disabled=Tracking.is_last_version_released(),
+            url_back=self.get_success_url(),
+            ))
         return context

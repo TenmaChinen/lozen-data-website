@@ -7,20 +7,14 @@
   <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block styles %}
-  <style>
-    main {
-      padding: 20px;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
+
+  {% include 'messages_error.html' %}
 
   <div class="form-container">
 
     <div class="form-header">
-      <div class="form-title">Delete Exercise Info ?</div>
+      <div class="form-title">Delete Exercise Info</div>
     </div>
 
     <div class="form-body">
@@ -28,22 +22,21 @@
       <form id="form" method="POST">
         {% csrf_token %}
 
-          <div class="form-group">
-            <label>Title</label>
-            {{exercise_info.title}}
+        <div class="form-group-flat">
+          <label>New ID : </label>
+          <div>{{exercise_info_id}}</div>
+        </div>
+
+          <div class="form-group-flat">
+            <label>Unique ID :</label>
+            {{exercise_info.unique_id}}
           </div>
 
       </form>
 
     </div>
 
-    <div class="form-footer">
-      <div></div>
-      <div class="footer-group">
-        <a type="button" class="btn-form" href="{% url 'exercises_info:list' %}">Cancel</a>
-        <button type="submit" form="form" class="btn-form">Delete</button>
-      </div>
-    </div>
+    {% include 'form-footer-delete.html' with url=url_back %}
 
   </div>
 

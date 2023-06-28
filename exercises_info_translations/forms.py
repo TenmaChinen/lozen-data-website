@@ -6,3 +6,8 @@ class FormExerciseInfoTranslation(forms.ModelForm):
   class Meta:
     model = ExerciseInfoTranslation
     exclude = ('exercise_info', 'version', )
+
+
+  def disable(self):
+    self.fields['title'].widget.attrs['disabled'] = True
+    self.fields['description'].widget.attrs['disabled'] = True

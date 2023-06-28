@@ -105,7 +105,7 @@ def download_changes(request):
 
             queryset = ExerciseInfo.objects.filter(version__in = l_version)
             if queryset.exists():
-                df_1 = DataFrame.from_records(data=queryset.values('id'))
+                df_1 = DataFrame.from_records(data=queryset.values('id','unit_type'))
 
             queryset = ExerciseInfoTranslation.objects.filter(version__in = l_version, language_id=language_id)
             if queryset.exists():
@@ -159,7 +159,7 @@ def download_changes(request):
 
             queryset = Exercise.objects.filter(version__in = l_version)
             if queryset.exists():
-                values = queryset.values('exercise_info_id', 'program_id', 'week', 'day', 'idx', 'sets', 'reps', 'percent', 'power', 'rir', 'rest' )
+                values = queryset.values('exercise_info_id', 'program_id', 'week', 'day', 'idx', 'sets', 'unit_value', 'percent', 'power', 'rir', 'rest' )
                 df = DataFrame.from_records(data=values)
                 d_return['exercises'] = df.to_dict(orient='list')
             

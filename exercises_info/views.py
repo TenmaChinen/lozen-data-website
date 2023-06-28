@@ -17,6 +17,8 @@ from languages.models import Language
 from languages.forms import LanguageForm
 from programs.models import Program
 
+import utils
+
 ###############################
 #######   C R E A T E   #######
 ###############################
@@ -28,29 +30,39 @@ class ExerciseInfoCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          messages.error(request,'Add one open tracking before adding a new "Exercise Info"')
+          utils.add_open_track_message(request)
           return redirect(self.success_url)
       return super().dispatch(request, *args, **kwargs)
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.initial['id'] = ExerciseInfo.get_new_id()
-        return form
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['new_id'] = ExerciseInfo.get_new_id()
+        context['url_cancel'] = self.get_success_url()
+        return context
+    
     def form_valid(self, form):
-        form.instance.id = ExerciseInfo.get_new_id()
         form.instance.version = Tracking.get_last_version()
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        d_kwargs = dict( language_id =  self.request.session.get( 'language_id', 1))
+        return reverse_lazy('exercises_info:list', kwargs = d_kwargs)
 
 ###############################
 #########   L I S T   #########
 ###############################
 
-def exercise_info_list_view(request, language_id):
+# TODO : Add some Increase version for All ( Parent or Translations ) button
+# In case we add a new field
+
+def exercise_info_list_view(request, language_id=0):
 
     if not Language.objects.exists():
         messages.error(request, 'You need to add at least one Language')
         return redirect(reverse_lazy('languages:list'))
+    
+    if language_id == 0:
+        language_id = get_session_language(request)
 
     last_version = Tracking.get_last_version()
     exercises_info = ExerciseInfo.objects.all().order_by('id')
@@ -61,16 +73,16 @@ def exercise_info_list_view(request, language_id):
         query = ExerciseInfoTranslation.objects.filter(exercise_info_id=exercise_info.id, language_id=language_id)
         if query.exists():
             program_translation = query.first()
-        else:
+        elif last_version != -1:
             program_translation = ExerciseInfoTranslation(exercise_info_id=exercise_info.id, language_id=language_id, version=last_version)
             program_translation.save()
+        else:
+            program_translation = None
 
         l_exercise_info_translation.append(program_translation)
 
-    l_exercise_info_translation.sort( key = lambda record : record.exercise_info_id )
-
     l_exercise_info = zip(exercises_info, l_exercise_info_translation)
-
+    
     context = dict(
         language=Language.objects.get(id=language_id),
         list_exercise_info=l_exercise_info,
@@ -92,10 +104,8 @@ class ExerciseInfoDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        language_id = self.request.session.get('language_id',1)
         context.update(dict(
-            url_back = reverse_lazy('exercises_info:list', kwargs=dict(language_id=language_id)),
-
+            url_back = reverse_lazy('exercises_info:list')
         ))
         return context
 
@@ -108,27 +118,32 @@ class ExerciseInfoUpdateView(UpdateView):
     form_class = FormExerciseInfo
     template_name = 'exercises_info/update.html'
     context_object_name = 'exercise_info'
+    success_url = reverse_lazy('exercises_info:list')
 
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          return redirect(self.get_success_url())
+          utils.add_open_track_message(request)
       return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.version = Tracking.get_last_version()
         return super().form_valid(form)
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if Tracking.is_last_version_released():
+            form.disable()
+        return form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(dict(
-            url_back=self.get_success_url(),
+            disabled = Tracking.is_last_version_released(),
+            exercise_info_id = self.object.id,
+            url_back=self.success_url,
             url_delete=reverse_lazy('exercises_info:delete', kwargs=dict(pk=self.object.id))
         ))
         return context
-
-    def get_success_url(self):
-        language_id = self.request.session.get('language_id',1)
-        return reverse_lazy('exercises_info:list', kwargs=dict(language_id=language_id))
 
 ###############################
 #######   D E L E T E   #######
@@ -138,12 +153,25 @@ class ExerciseInfoDeleteView(DeleteView):
     model = ExerciseInfo
     template_name = 'exercises_info/delete.html'
     context_object_name = 'exercise_info'
-    success_url = reverse_lazy('exercises_info:list')
     
     def dispatch(self, request, *args, **kwargs):
       if Tracking.is_last_version_released():
-          return redirect(self.success_url)
+          utils.add_open_track_message(request)
       return super().dispatch(request, *args, **kwargs)
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update( dict(
+            disabled = Tracking.is_last_version_released(),
+            exercise_info_id = self.object.id,
+            url_back = self.get_success_url()
+        ))
+        return context
+
+    def get_success_url(self):
+        d_kwargs = dict(language_id=get_session_language(self.request))
+        return reverse_lazy('exercises_info:list', kwargs=d_kwargs)
 
     # def delete(self, request, *args, **kwargs):
     #     return super().delete(request, *args, **kwargs)
@@ -157,7 +185,7 @@ def exercise_info_upload_view(request):
     url_back = reverse_lazy('exercises_info:list', kwargs=dict(language_id=1))
     last_tracking_version = Tracking.get_last_version()
     if last_tracking_version == -1:
-        messages.error(request,'Add one open tracking before uploading "Exercise Info"')
+        utils.add_open_track_message(request)
         return redirect(url_back)
 
     ###################
@@ -213,7 +241,7 @@ def get_exercises_info_dict():
     
     queryset = ExerciseInfo.objects.all()
     if queryset.exists():
-        values = queryset.values('id','unique_id')
+        values = queryset.values('id','unique_id', 'unit_type')
         d_parent = DataFrame(data=values)
         d_parent.set_index('id', inplace=True)
         d_raw = d_parent.to_dict(orient='index')
@@ -233,3 +261,7 @@ def get_exercises_info_dict():
 
         return d_raw
     return {}
+
+
+def get_session_language(request):
+   return request.session.get('language_id',1)

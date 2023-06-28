@@ -2,6 +2,6 @@
 	<div></div>
 	<div class="row">
 		<a type="button" class="btn-form" href="{{url}}">Cancel</a>
-		<button type="submit" form="form" class="btn-form ic-delete">Delete</button>
+		<button type="submit" form="form" tabindex="{{disabled|yesno:'-1,'}}"  class="btn-form btn-delete {{disabled|yesno:'disabled,'}}">Delete</button>
 	</div>
 </div>

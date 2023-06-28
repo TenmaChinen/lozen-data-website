@@ -4,7 +4,7 @@ from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='trainings/list/1')),
+    path('', RedirectView.as_view(url='trainings/list')),
     
     path('trainings/', include('trainings.urls')),
     path('trainings_translations/', include('trainings_translations.urls')),

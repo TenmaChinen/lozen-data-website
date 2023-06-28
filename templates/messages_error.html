@@ -1,9 +1,11 @@
-<div class="messages-container">
-    {% for message in messages %}
-      {% if message.tags == 'error' %}
-        <div class="message-alert">
-            {{ message }}
-        </div>
+{% for message in messages %}
+  <div class="messages-container">
+    {% if 'error' in message.tags  %}
+      {% if 'track' in message.tags %}
+        <a class="message-alert" href="{% url 'trackings:create' %}">{{ message }} <i class="icon ic-add"></i></a>
+      {% else %}
+        {{ message }}
       {% endif %}
-    {% endfor %}
-</div>
+    {% endif %}
+  </div>
+{% endfor %}

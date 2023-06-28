@@ -12,6 +12,8 @@
 
 {% block content %}
 
+  {% include 'messages_error.html' %}
+
   <div class="form-container">
 
     <div class="form-header">
@@ -23,8 +25,14 @@
       <form id="form" method="POST">
         {% csrf_token %}
 
+        <div class="form-group-flat">
+          <label>New ID : </label>
+          <div>{{exercise_info_id}}</div>
+        </div>
+
           {% for field in form %}
             <div class="form-group">
+              {{field.errors}}
               {{field.label_tag}}
               {{field}}
             </div>

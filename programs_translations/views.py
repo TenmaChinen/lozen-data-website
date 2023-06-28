@@ -9,27 +9,34 @@ from programs.models import Program
 
 from trackings.models import Tracking
 
+import utils
+
 ###############################
 #######   D E T A I L   #######
 ###############################
 
-def program_translation_detail_view(request, program_id, language_id):
+def program_translation_detail_view(request, program_id, language_id=0):
+
+    last_version = Tracking.get_last_version()
+    language_id = utils.handle_language(request,language_id)
 
     program = Program.objects.get(id=program_id)
     queryset = ProgramTranslation.objects.filter(program_id=program_id, language_id=language_id)
     if queryset.exists():
         program_translation = queryset.first()
-    else:
+    elif last_version != -1:
         program_translation = ProgramTranslation(program_id=program_id, language_id=language_id)
-        program_translation.version = Tracking.get_last_version()
+        program_translation.version = last_version
         program_translation.save()
+    else:
+        program_translation = None
 
     context = dict(
         program = program,
         language_id = language_id,
         program_translation = program_translation,
         language_widget=LanguageForm.get_language_widget(language_id=language_id),
-        url_back=reverse_lazy('programs:list', kwargs=dict(training_id=program.training_id, language_id=language_id)),
+        url_back=reverse_lazy('programs:list', kwargs=dict(training_id=program.training_id)),
     )
 
     return render(request, 'programs_translations/detail.html', context)
@@ -38,22 +45,26 @@ def program_translation_detail_view(request, program_id, language_id):
 #######   U P D A T E   #######
 ###############################
 
-def program_translation_update_view(request, program_id, language_id):
+def program_translation_update_view(request, program_id, language_id=0):
     
+    language_id = utils.handle_language(request,language_id)
+
     program = Program.objects.get(id=program_id)
-    url_success = reverse_lazy('programs:list', kwargs=dict(training_id=program.training_id, language_id=language_id))
+    url_success = reverse_lazy('programs:list', kwargs=dict(training_id=program.training_id))
     
     last_version = Tracking.get_last_version()
     if last_version == -1:
-          return redirect(url_success)
+        utils.add_open_track_message(request)
     
     query = ProgramTranslation.objects.filter(program_id=program_id, language_id=language_id)
     if query.exists():
         program_translation = query.first()
-    else:
+    elif last_version != -1:
         program_translation = ProgramTranslation(program_id=program_id, language_id=language_id)
         program_translation.version = last_version
         program_translation.save()
+    else:
+        program_translation = None
 
     ###################
     ###   P O S T   ###
@@ -73,11 +84,15 @@ def program_translation_update_view(request, program_id, language_id):
         ###################
         
         form_program_translation = FormProgramTranslation(instance=program_translation)
+        if last_version == -1:
+            form_program_translation.disable()
+
 
     #########################
     ####   C O M M O N   ####
     #########################
     context = dict(
+        disabled=last_version==-1,
         program=program,
         form_program_translation=form_program_translation,
         url_back = url_success,

@@ -9,6 +9,8 @@
 
 {% block content %}
 
+  {% include 'messages_error.html' %}
+
   <div class="form-container">
 
     <div class="form-header">
@@ -20,12 +22,12 @@
         {% csrf_token %}
         
         <p>
-          <label>Title :</label> {{object.title}}
+          <label>Title :</label> {{object.unique_id}}
         </p>
           
       </form>
     </div>
 
-    {% include 'form-footer-delete.html' with url=url_back %}
+    {% include 'form-footer-delete.html' with url=url_cancel %}
 
 {% endblock %}

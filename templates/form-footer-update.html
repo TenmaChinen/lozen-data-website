@@ -1,7 +1,16 @@
 <div class="form-footer">
-	<a type="button" class="btn-form ic-delete" href="{{url_delete}}">Delete</a>
+	{% if disabled %}
+		<a type="button" tabindex="-1" class="btn-form ic-delete disabled" href="{{url_delete}}">Delete</a>
+	{% else %}
+		<a type="button" class="btn-form ic-delete" href="{{url_delete}}">Delete</a>
+	{% endif %}
 	<div class="footer-group">
 		<a type="button" class="btn-form" href="{{url_cancel}}">Cancel</a>
-		<button type="submit" form="form" class="btn-form">Save</button>
+		
+		{% if disabled %}
+			<button type="submit" tabindex="-1" form="form" class="btn-form disabled">Save</button>
+		{% else %}
+			<button type="submit" form="form" class="btn-form">Save</button>
+		{% endif %}
 	</div>
 </div>

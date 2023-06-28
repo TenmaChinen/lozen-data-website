@@ -13,7 +13,6 @@ from trackings.models import Tracking
 #######   C R E A T E   #######
 ###############################
 
-
 class LanguageCreateView(CreateView):
     form_class = LanguageForm
     template_name = 'languages/create.html'
@@ -45,7 +44,6 @@ class LanguageCreateView(CreateView):
 #########   L I S T   #########
 ###############################
 
-
 class LanguageListView(ListView):
     model = Language
     template_name = 'languages/list.html'
@@ -54,7 +52,6 @@ class LanguageListView(ListView):
 ###############################
 #######   U P D A T E   #######
 ###############################
-
 
 class LanguageUpdateView(UpdateView):
     model = Language
@@ -65,13 +62,15 @@ class LanguageUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['url_back'] = self.success_url
-        context['url_delete'] = reverse_lazy(
-            'languages:delete', kwargs=dict(pk=self.kwargs['pk']))
+        context['url_delete'] = reverse_lazy('languages:delete', kwargs=dict(pk=self.kwargs['pk']))
         return context
 
-    def form_valid(self, form):
-        form.instance.version = Tracking.get_last_version()
-        return super().form_valid(form)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # To prevent from required error
+        form.fields['id'].required=False
+        form.fields['id'].widget.attrs['disabled'] = True
+        return form
 
 ###############################
 #######   D E L E T E   #######
